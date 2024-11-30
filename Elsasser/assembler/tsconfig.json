@@ -1,0 +1,66 @@
+{
+	"compilerOptions": {
+		"allowUnreachableCode": false,
+		"alwaysStrict": true,
+		/* Generates corresponding '.d.ts' file. */
+		"declaration": true,
+		/* Generates a sourcemap for each corresponding '.d.ts' file. */
+		"declarationMap": true,
+		/* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
+		"module": "commonjs",
+		/* Redirect output structure to the directory. */
+		"outDir": "./build",
+		/* Do not generate javascript on errors. */
+		"noEmitOnError": false,
+		/* Raise error on expressions and declarations with an implied 'any' type. */
+		"noImplicitAny": true,
+		/* Raise error on 'this' expressions with an implied 'any' type. */
+		"noImplicitThis": true,
+		/* Report error when not all code paths in function return a value. */
+		"noImplicitReturns": true,
+		/* Report errors on unused locals. */
+		"noUnusedLocals": true,
+		"pretty": true,
+		"resolveJsonModule": true,
+		/* We are turning off because we don't want to be able to trust the integrity of a midi file and not validate read data types */
+		"strictNullChecks": false,
+		/* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017', 'ES2018', 'ES2019' or 'ESNEXT'. */
+		"target": "es2020"
+		// "allowSyntheticDefaultImports": true,  /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+		// "allowUmdGlobalAccess": true,          /* Allow accessing UMD globals from modules. */
+		// "baseUrl": "./",                       /* Base directory to resolve non-absolute module names. */
+		// "checkJs": true,                       /* Report errors in .js files. */
+		// "composite": true,                     /* Enable project compilation */
+		// "downlevelIteration": true,            /* Provide full support for iterables in 'for-of', spread, and destructuring when targeting 'ES5' or 'ES3'. */
+		// "emitDecoratorMetadata": true,         /* Enables experimental support for emitting type metadata for decorators. */
+		// "importHelpers": true,                 /* Import emit helpers from 'tslib'. */
+		// "incremental": true,                   /* Enable incremental compilation */
+		// "inlineSourceMap": true,               /* Emit a single file with source maps instead of having a separate file. */
+		// "inlineSources": true,                 /* Emit the source alongside the sourcemaps within a single file; requires '--inlineSourceMap' or '--sourceMap' to be set. */
+		// "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
+		// "jsx": "preserve",                     /* Specify JSX code generation: 'preserve', 'react-native', or 'react'. */
+		// "lib": [],                             /* Specify library files to be included in the compilation. */
+		// "mapRoot": "",                         /* Specify the location where debugger should locate map files instead of generated locations. */
+		// "noFallthroughCasesInSwitch": true,    /* Report errors for fallthrough cases in switch statement. */
+		// "noImplicitThis": true,                /* Raise error on 'this' expressions with an implied 'any' type. */
+		// "noUnusedParameters": true,            /* Report errors on unused parameters. */
+		// "outFile": "./",                       /* Concatenate and emit output to single file. */
+		// "paths": {},                           /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+		// "preserveSymlinks": true,              /* Do not resolve the real path of symlinks. */
+		// "removeComments": true,                /* Do not emit comments to output. */
+		// "rootDir": "./",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+		// "rootDirs": [],                        /* List of root folders whose combined content represents the structure of the project at runtime. */
+		// "sourceMap": true,                     /* Generates corresponding '.map' file. */
+		// "sourceRoot": "",                      /* Specify the location where debugger should locate TypeScript files instead of source locations. */
+		// "strictBindCallApply": true,           /* Enable strict 'bind', 'call', and 'apply' methods on functions. */
+		// "strictFunctionTypes": true,           /* Enable strict checking of function types. */
+		// "strictPropertyInitialization": true,  /* Enable strict checking of property initialization in classes. */
+		// "tsBuildInfoFile": "./",               /* Specify file to store incremental compilation information */
+		// "typeRoots": [],                       /* List of folders to include type definitions from. */
+		// "types": [],                           /* Type declaration files to be included in compilation. */
+	},
+	"include": [
+		"src/**/*",
+		"res/**/*.json"
+	]
+}

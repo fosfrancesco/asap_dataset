@@ -1,0 +1,34 @@
+{
+	"author": "curtis.elsasser22@spsmail.cuny.edu",
+	"dependencies": {
+		"commander": "12.1.0",
+		"midi-file-io": "4.1.1",
+		"fast-csv": "5.0.2"
+	},
+	"description": "Converts a MIDI file to a CSV file.",
+	"devDependencies": {
+		"@types/fs-extra": "11.0.4",
+		"@types/jest": "29.5.14",
+		"@types/node": "22.10.0",
+		"typescript": "5.7.2"
+	},
+	"engines": {
+		"node": ">=22.0.0"
+	},
+	"keywords": [
+		"assember",
+		"MIDI"
+	],
+	"license": "Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International",
+	"main": "build/index",
+	"name": "assembler",
+	"readme": "./README.md",
+	"scripts": {
+		"build": "npx tsc -p tsconfig.json",
+		"clean": "rm -rf './.buildcache' '*.log' './build'",
+		"deploy": "npm run rebuild && npm run test && npm publish",
+		"rebuild": "npm run clean && npm run build"
+	},
+	"types": "build/index.d.ts",
+	"version": "0.0.1"
+}

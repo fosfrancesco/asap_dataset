@@ -1,0 +1,23 @@
+# ignore the common tmp, debug, intermediate and ephemeral fellas
+*.DS_Store
+*.cache
+*.swp
+*~
+*.tmp
+*.zip
+
+# log files
+/log
+
+# eliminate .idea
+.idea
+
+# misc directories and files that are automatically generated
+coverage
+build
+node_modules
+package-lock.json
+
+# dynamic stuff that we don't want to keep
+!trash/.keep
+trash/*
