@@ -3,6 +3,21 @@ import {
     MidiIoEventSubtype
 } from "midi-file-io";
 
+export enum NoteInterval {
+    PerfectUnison = 1,
+    MinorSecond = 1.5,
+    MajorSecond = 2,
+    MinorThird = 2.5,
+    MajorThird = 3,
+    PerfectFourth = 4,
+    DiminishedFifth = 4.5,
+    PerfectFifth = 5,
+    MinorSixth = 5.5,
+    MajorSixth = 6,
+    MinorSeventh = 6.5,
+    MajorSeventh = 7
+}
+
 export interface Composer {
     name: string;
     yearBorn: number;
@@ -34,7 +49,14 @@ export interface CsvFile {
 }
 
 export interface MidiIoEventAbs extends MidiIoEvent {
+    /**
+     * See metrics::calculateNoteDensity for more information
+     */
     density?: number;
+    /**
+     * See metrics::calculateNoteInterval for more information
+     */
+    interval?: number;
     tickOffset: number;
     tickLength: number;
 }

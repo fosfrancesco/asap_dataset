@@ -12,7 +12,6 @@ import {
 	parseMidiFile
 } from "midi-file-io"
 import {createWriteStream} from "node:fs";
-import {calculateDensity} from "./density";
 import {
 	formatKeySignatureValuePretty,
 	formatKeySignatureValueRaw,
@@ -24,6 +23,10 @@ import {
 	formatTimeSignatureValuePretty,
 	formatTimeSignatureValueRaw
 } from "./format";
+import {
+	calculateNoteDensity,
+	calculateNoteInterval
+} from "./metrics";
 import {
 	MidiIoEventAbs,
 	MidiIoEventSubtypeExt,
@@ -157,7 +160,8 @@ function performCalculations(track: MidiIoTrackAbs, header: MidiIoHeader): MidiI
 		return e.subtype === MidiIoEventSubtype.NoteOn;
 	});
 	notes.forEach((note, index): void => {
-		note.density = calculateDensity(notes, index, header.ticksPerQuarter);
+		note.density = calculateNoteDensity(notes, index, header.ticksPerQuarter);
+		note.interval = calculateNoteInterval(notes, index)?.normalized;
 	});
 	return track;
 }
@@ -226,9 +230,8 @@ function rectanglify(midi: MidiIoSong): any[] {
 				formatNoteValueRaw(event),
 				formatNoteValuePretty(event, eventKS),
 				formatNoteValueCanonical(event),
-				round(event.density, 4
-				)
-
+				round(event.density, 4),
+				event.interval
 			];
 		} else if (event.subtype === MidiIoEventSubtype.SetTempo) {
 			return [
@@ -237,7 +240,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				formatTempoValueRaw(event),
 				formatTempoValuePretty(event),
-				"", ""
+				"", "", ""
 			];
 		} else if (event.subtype === MidiIoEventSubtype.KeySignature) {
 			eventKS = event;
@@ -247,7 +250,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				formatKeySignatureValueRaw(event),
 				formatKeySignatureValuePretty(event),
-				"", ""
+				"", "", ""
 			];
 		} else if (event.subtype === MidiIoEventSubtype.TimeSignature) {
 			return [
@@ -256,7 +259,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				formatTimeSignatureValueRaw(event),
 				formatTimeSignatureValuePretty(event),
-				"", ""
+				"", "", ""
 			]
 		} else if (event.subtype === MidiIoEventSubtypeExt.TicksPerQuarter) {
 			return [
@@ -265,7 +268,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				event.value,
 				event.value,
-				"", ""
+				"", "", ""
 			]
 		} else {
 			throw new Error(`Unknown event subtype: ${event.subtype}`);
@@ -305,7 +308,7 @@ async function writeCSV(path: string, rect: FormatterRow): Promise<void> {
 				reject(new Error(`Error writing ${path}: ${error}`));
 			});
 		let streamCsv = format({
-			headers: ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density"],
+			headers: ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density", "interval"],
 			quoteColumns: [false, false, false, false, false, false, false]
 		});
 		streamCsv.pipe(streamFile);
