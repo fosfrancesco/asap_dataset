@@ -30,7 +30,6 @@ import {
 	MidiIoTrackAbs
 } from "./types";
 import {round} from "./utils";
-import assert = require("node:assert");
 
 const sortMap = new Map<MidiIoEventSubtype, number>();
 sortMap.set(MidiIoEventSubtypeExt.TicksPerQuarter as MidiIoEventSubtype, 0);
@@ -51,8 +50,7 @@ export async function execute(pathMIDI: string, pathCSV: string): Promise<void> 
 			writeCSV(pathCSV, rect)
 				.then(resolve)
 				.catch(reject);
-		}
-		catch (e) {
+		} catch (e) {
 			reject(e);
 		}
 	})
@@ -283,10 +281,16 @@ function sortTrack(track: MidiIoTrackAbs): MidiIoTrackAbs {
 			const subtypeComparison = sortMap.get(a.subtype) - sortMap.get(b.subtype);
 			if (subtypeComparison !== 0) {
 				return subtypeComparison;
+			} else if (a.subtype !== MidiIoEventSubtype.NoteOn) {
+				// How can this happen? We trimmed duplicate meta events from the beginning
+				// of our track, but not the middle. We have some content with duplicates in the middle.
+				// We'll see if it causes a problem and if so then do something about it. Hopefully they
+				// are identical? Let's see..., okay, we saw and found that it is a little challenging
+				// to compare them because of deltaTicks. And what are we going to do if they are not equal!?!
+				return subtypeComparison;
 			} else {
-				// I changed my mind. If this isn't a note event then I want to know about it, cuz it should be.
-				assert(a.subtype=== MidiIoEventSubtype.NoteOn, `how did we get here? ${JSON.stringify(a)}`)
-				// let's always have our notes in ascending order
+				// let's always have our notes in ascending order. We like order, but we also
+				// want to calculate intervals between adjacent notes
 				return a.noteNumber - b.noteNumber;
 			}
 		}
