@@ -30,6 +30,7 @@ import {
 	MidiIoTrackAbs
 } from "./types";
 import {round} from "./utils";
+import assert = require("node:assert");
 
 const sortMap = new Map<MidiIoEventSubtype, number>();
 sortMap.set(MidiIoEventSubtypeExt.TicksPerQuarter as MidiIoEventSubtype, 0);
@@ -279,11 +280,18 @@ function sortTrack(track: MidiIoTrackAbs): MidiIoTrackAbs {
 		if (a.tickOffset !== b.tickOffset) {
 			return a.tickOffset - b.tickOffset
 		} else {
-			return sortMap.get(a.subtype) - sortMap.get(b.subtype);
+			const subtypeComparison = sortMap.get(a.subtype) - sortMap.get(b.subtype);
+			if (subtypeComparison !== 0) {
+				return subtypeComparison;
+			} else {
+				// I changed my mind. If this isn't a note event then I want to know about it, cuz it should be.
+				assert(a.subtype=== MidiIoEventSubtype.NoteOn, `how did we get here? ${JSON.stringify(a)}`)
+				// let's always have our notes in ascending order
+				return a.noteNumber - b.noteNumber;
+			}
 		}
 	});
 }
-
 
 async function writeCSV(path: string, rect: FormatterRow): Promise<void> {
 	return new Promise((resolve, reject) => {
