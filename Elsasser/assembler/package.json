@@ -2,14 +2,16 @@
 	"author": "curtis.elsasser22@spsmail.cuny.edu",
 	"dependencies": {
 		"commander": "12.1.0",
-		"midi-file-io": "4.1.1",
-		"fast-csv": "5.0.2"
+		"fast-csv": "5.0.2",
+		"midi-file-io": "4.1.1"
 	},
 	"description": "Converts a MIDI file to a CSV file.",
 	"devDependencies": {
 		"@types/fs-extra": "11.0.4",
 		"@types/jest": "29.5.14",
 		"@types/node": "22.10.0",
+		"jest": "29.7.0",
+		"ts-jest": "29.2.5",
 		"typescript": "5.7.2"
 	},
 	"engines": {
@@ -27,8 +29,9 @@
 		"build": "npx tsc -p tsconfig.json",
 		"clean": "rm -rf './.buildcache' '*.log' './build'",
 		"deploy": "npm run rebuild && npm run test && npm publish",
-		"rebuild": "npm run clean && npm run build"
+		"rebuild": "npm run clean && npm run build",
+		"test": "jest"
 	},
 	"types": "build/index.d.ts",
-	"version": "0.0.1"
+	"version": "0.0.2"
 }
