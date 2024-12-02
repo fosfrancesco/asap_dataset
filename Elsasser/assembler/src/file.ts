@@ -12,7 +12,6 @@ import {
 	parseMidiFile
 } from "midi-file-io"
 import {createWriteStream} from "node:fs";
-import {calculateDensity} from "./density";
 import {
 	formatKeySignatureValuePretty,
 	formatKeySignatureValueRaw,
@@ -24,6 +23,10 @@ import {
 	formatTimeSignatureValuePretty,
 	formatTimeSignatureValueRaw
 } from "./format";
+import {
+	calculateNoteDensity,
+	calculateNoteInterval
+} from "./metrics";
 import {
 	MidiIoEventAbs,
 	MidiIoEventSubtypeExt,
@@ -50,8 +53,7 @@ export async function execute(pathMIDI: string, pathCSV: string): Promise<void> 
 			writeCSV(pathCSV, rect)
 				.then(resolve)
 				.catch(reject);
-		}
-		catch (e) {
+		} catch (e) {
 			reject(e);
 		}
 	})
@@ -158,7 +160,8 @@ function performCalculations(track: MidiIoTrackAbs, header: MidiIoHeader): MidiI
 		return e.subtype === MidiIoEventSubtype.NoteOn;
 	});
 	notes.forEach((note, index): void => {
-		note.density = calculateDensity(notes, index, header.ticksPerQuarter);
+		note.density = calculateNoteDensity(notes, index, header.ticksPerQuarter);
+		note.interval = calculateNoteInterval(notes, index)?.normalized;
 	});
 	return track;
 }
@@ -227,9 +230,8 @@ function rectanglify(midi: MidiIoSong): any[] {
 				formatNoteValueRaw(event),
 				formatNoteValuePretty(event, eventKS),
 				formatNoteValueCanonical(event),
-				round(event.density, 4
-				)
-
+				round(event.density, 4),
+				event.interval
 			];
 		} else if (event.subtype === MidiIoEventSubtype.SetTempo) {
 			return [
@@ -238,7 +240,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				formatTempoValueRaw(event),
 				formatTempoValuePretty(event),
-				"", ""
+				"", "", ""
 			];
 		} else if (event.subtype === MidiIoEventSubtype.KeySignature) {
 			eventKS = event;
@@ -248,7 +250,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				formatKeySignatureValueRaw(event),
 				formatKeySignatureValuePretty(event),
-				"", ""
+				"", "", ""
 			];
 		} else if (event.subtype === MidiIoEventSubtype.TimeSignature) {
 			return [
@@ -257,7 +259,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				formatTimeSignatureValueRaw(event),
 				formatTimeSignatureValuePretty(event),
-				"", ""
+				"", "", ""
 			]
 		} else if (event.subtype === MidiIoEventSubtypeExt.TicksPerQuarter) {
 			return [
@@ -266,7 +268,7 @@ function rectanglify(midi: MidiIoSong): any[] {
 				event.tickLength,
 				event.value,
 				event.value,
-				"", ""
+				"", "", ""
 			]
 		} else {
 			throw new Error(`Unknown event subtype: ${event.subtype}`);
@@ -279,11 +281,24 @@ function sortTrack(track: MidiIoTrackAbs): MidiIoTrackAbs {
 		if (a.tickOffset !== b.tickOffset) {
 			return a.tickOffset - b.tickOffset
 		} else {
-			return sortMap.get(a.subtype) - sortMap.get(b.subtype);
+			const subtypeComparison = sortMap.get(a.subtype) - sortMap.get(b.subtype);
+			if (subtypeComparison !== 0) {
+				return subtypeComparison;
+			} else if (a.subtype !== MidiIoEventSubtype.NoteOn) {
+				// How can this happen? We trimmed duplicate meta events from the beginning
+				// of our track, but not the middle. We have some content with duplicates in the middle.
+				// We'll see if it causes a problem and if so then do something about it. Hopefully they
+				// are identical? Let's see..., okay, we saw and found that it is a little challenging
+				// to compare them because of deltaTicks. And what are we going to do if they are not equal!?!
+				return subtypeComparison;
+			} else {
+				// let's always have our notes in ascending order. We like order, but we also
+				// want to calculate intervals between adjacent notes
+				return a.noteNumber - b.noteNumber;
+			}
 		}
 	});
 }
-
 
 async function writeCSV(path: string, rect: FormatterRow): Promise<void> {
 	return new Promise((resolve, reject) => {
@@ -293,7 +308,7 @@ async function writeCSV(path: string, rect: FormatterRow): Promise<void> {
 				reject(new Error(`Error writing ${path}: ${error}`));
 			});
 		let streamCsv = format({
-			headers: ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density"],
+			headers: ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density", "interval"],
 			quoteColumns: [false, false, false, false, false, false, false]
 		});
 		streamCsv.pipe(streamFile);
