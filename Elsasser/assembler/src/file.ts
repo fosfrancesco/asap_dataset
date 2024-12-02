@@ -1,7 +1,4 @@
-import {
-	format,
-	FormatterRow
-} from "fast-csv"
+import {format, FormatterRow} from "fast-csv"
 import {
 	MidiIoEvent,
 	MidiIoEventSubtype,
@@ -23,17 +20,21 @@ import {
 	formatTimeSignatureValuePretty,
 	formatTimeSignatureValueRaw
 } from "./format";
-import {
-	calculateNoteDensity,
-	calculateNoteInterval
-} from "./metrics";
-import {
-	MidiIoEventAbs,
-	MidiIoEventSubtypeExt,
-	MidiIoTrackAbs
-} from "./types";
+import {calculateNoteDensity, calculateNoteInterval} from "./metrics";
+import {MidiIoEventAbs, MidiIoEventSubtypeExt, MidiIoTrackAbs} from "./types";
 import {round} from "./utils";
 
+/**
+ * Whether we write narrow or wide rectangular dataframe:
+ * - narrow - space efficient, but more difficult to analyze (in R)
+ * - wide - a lot of data redundancy, but easier to work with
+ */
+enum EncodeWidth {
+	Wide = "wide",
+	Narrow = "narrow"
+}
+
+const encodeWidth = EncodeWidth.Wide;
 const sortMap = new Map<MidiIoEventSubtype, number>();
 sortMap.set(MidiIoEventSubtypeExt.TicksPerQuarter as MidiIoEventSubtype, 0);
 sortMap.set(MidiIoEventSubtype.KeySignature, 1);
@@ -215,16 +216,27 @@ function preprocessTracks(tracks: MidiIoTrack[]): MidiIoTrackAbs[] {
 }
 
 function rectanglify(midi: MidiIoSong): any[] {
-	let eventKS: MidiIoEventAbs;
 	const preprocessed = preprocessTracks(midi.tracks);
 	const merged = mergeTracks(preprocessed);
 	const normalized = normalizeTrack(merged, midi.header);
 	const sorted = sortTrack(normalized);
 	const calculated = performCalculations(sorted, midi.header);
-	return calculated.map(event => {
+	return (encodeWidth === EncodeWidth.Wide)
+		? rectanglifyWide(calculated)
+		: rectanglifyNarrow(calculated);
+}
+
+/**
+ * A lean encoding. Metadata is not redundantly repeated for every note. It's
+ * lean, but it's not tidy. And I'm not so hot with R such that it's easy to tidyify.
+ * @param track
+ */
+function rectanglifyNarrow(track: MidiIoTrackAbs): any[] {
+	let eventKS: MidiIoEventAbs;
+	return track.map(event => {
 		if (event.subtype === MidiIoEventSubtype.NoteOn) {
 			return [
-				event.subtype,
+				"note",
 				event.tickOffset,
 				event.tickLength,
 				formatNoteValueRaw(event),
@@ -235,40 +247,105 @@ function rectanglify(midi: MidiIoSong): any[] {
 			];
 		} else if (event.subtype === MidiIoEventSubtype.SetTempo) {
 			return [
-				event.subtype,
+				"tempo",
 				event.tickOffset,
 				event.tickLength,
 				formatTempoValueRaw(event),
-				formatTempoValuePretty(event),
-				"", "", ""
+				formatTempoValuePretty(event)
 			];
 		} else if (event.subtype === MidiIoEventSubtype.KeySignature) {
 			eventKS = event;
 			return [
-				event.subtype,
+				"keySignature",
 				event.tickOffset,
 				event.tickLength,
 				formatKeySignatureValueRaw(event),
-				formatKeySignatureValuePretty(event),
-				"", "", ""
+				formatKeySignatureValuePretty(event)
 			];
 		} else if (event.subtype === MidiIoEventSubtype.TimeSignature) {
 			return [
-				event.subtype,
+				"timeSignature",
 				event.tickOffset,
 				event.tickLength,
 				formatTimeSignatureValueRaw(event),
-				formatTimeSignatureValuePretty(event),
-				"", "", ""
+				formatTimeSignatureValuePretty(event)
 			]
 		} else if (event.subtype === MidiIoEventSubtypeExt.TicksPerQuarter) {
 			return [
-				event.subtype,
+				"ticksPerQuarter",
 				event.tickOffset,
 				event.tickLength,
 				event.value,
+				event.value
+			]
+		} else {
+			throw new Error(`Unknown event subtype: ${event.subtype}`);
+		}
+	});
+}
+
+/**
+ * A chubby encoding. Metadata is redundantly repeated for every note. It's
+ * tidy and easy to work with.
+ * PS: I left the tempo, time-signature and key-signature rows in the data as they have
+ * 	information that's missing at the row level and they are easily filtered out. Additionally,
+ * 	I want to have the TPQ (ticks-per-quarter) available and just could not bring myself
+ * 	to include that at the note level.
+ * @param track
+ */
+function rectanglifyWide(track: MidiIoTrackAbs): any[] {
+	let lastTempo: MidiIoEventAbs;
+	let lastTS: MidiIoEventAbs;
+	let lastKS: MidiIoEventAbs;
+	return track.map(event => {
+		if (event.subtype === MidiIoEventSubtype.NoteOn) {
+			return [
+				"note",
+				event.tickOffset,
+				event.tickLength,
+				formatNoteValueRaw(event),
+				formatNoteValuePretty(event, lastKS),
+				formatNoteValueCanonical(event),
+				round(event.density, 4),
+				event.interval,
+				formatTempoValuePretty(lastTempo),
+				formatTimeSignatureValuePretty(lastTS),
+				formatKeySignatureValuePretty(lastKS),
+			];
+		} else if (event.subtype === MidiIoEventSubtype.SetTempo) {
+			lastTempo = event;
+			return [
+				"tempo",
+				event.tickOffset,
+				event.tickLength,
+				formatTempoValueRaw(event),
+				formatTempoValuePretty(event)
+			];
+		} else if (event.subtype === MidiIoEventSubtype.KeySignature) {
+			lastKS = event;
+			return [
+				"keySignature",
+				event.tickOffset,
+				event.tickLength,
+				formatKeySignatureValueRaw(event),
+				formatKeySignatureValuePretty(event)
+			];
+		} else if (event.subtype === MidiIoEventSubtype.TimeSignature) {
+			lastTS = event;
+			return [
+				"timeSignature",
+				event.tickOffset,
+				event.tickLength,
+				formatTimeSignatureValueRaw(event),
+				formatTimeSignatureValuePretty(event)
+			]
+		} else if (event.subtype === MidiIoEventSubtypeExt.TicksPerQuarter) {
+			return [
+				"ticksPerQuarter",
+				event.tickOffset,
+				event.tickLength,
 				event.value,
-				"", "", ""
+				event.value
 			]
 		} else {
 			throw new Error(`Unknown event subtype: ${event.subtype}`);
@@ -308,8 +385,11 @@ async function writeCSV(path: string, rect: FormatterRow): Promise<void> {
 				reject(new Error(`Error writing ${path}: ${error}`));
 			});
 		let streamCsv = format({
-			headers: ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density", "interval"],
-			quoteColumns: [false, false, false, false, false, false, false]
+			// @ts-ignore
+			headers: (encodeWidth === EncodeWidth.Narrow)
+				? ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density", "interval"]
+				: ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density", "interval", "tempo", "timeSignature", "keySignature"],
+			quoteColumns: false
 		});
 		streamCsv.pipe(streamFile);
 		rect.forEach((row: FormatterRow) => streamCsv.write(row));
