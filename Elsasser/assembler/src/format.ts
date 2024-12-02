@@ -1,4 +1,5 @@
 import {MidiIoEventAbs} from "./types";
+import * as utils from "./utils";
 
 const C0: number = 12;
 
@@ -74,7 +75,9 @@ export function formatTempoValueRaw(event: MidiIoEventAbs): string {
 }
 
 export function formatTempoValuePretty(event: MidiIoEventAbs): string {
-	return `${60 * 1000000 / event.microsecondsPerBeat}`
+	const bpm = 60 * 1000000 / event.microsecondsPerBeat;
+	return utils.round(bpm, 2)
+		.toString()
 }
 
 export function formatTimeSignatureValueRaw(event: MidiIoEventAbs): string {
