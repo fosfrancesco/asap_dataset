@@ -85,8 +85,7 @@ export function calculateNoteInterval(notes: MidiIoTrackAbs, index: number): {
 		const octaves = Math.floor(difference / 12);
 		let interval = distanceToInterval(difference % 12);
 		return {
-			unadulterated: `${interval}+${octaves}*
-			P8`,
+			unadulterated: `${interval}+${octaves}*P8`,
 			normalized: interval,
 		};
 	}
