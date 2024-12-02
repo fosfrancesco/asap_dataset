@@ -38,10 +38,10 @@ export function calculateNoteDensity(notes: MidiIoTrackAbs, index: number, windo
  * @param index index of note for which you want to calculate the interval
  */
 export function calculateNoteInterval(notes: MidiIoTrackAbs, index: number): {
-	unadulterated: number,
-	normalized: number
+	unadulterated: string,
+	normalized: string
 } | undefined {
-	function distanceToInterval(value: number): number {
+	function distanceToInterval(value: number): string {
 		switch (value) {
 			case 0:
 				return NoteInterval.PerfectUnison;
@@ -85,7 +85,8 @@ export function calculateNoteInterval(notes: MidiIoTrackAbs, index: number): {
 		const octaves = Math.floor(difference / 12);
 		let interval = distanceToInterval(difference % 12);
 		return {
-			unadulterated: interval + octaves * 12,
+			unadulterated: `${interval}+${octaves}*
+			P8`,
 			normalized: interval,
 		};
 	}

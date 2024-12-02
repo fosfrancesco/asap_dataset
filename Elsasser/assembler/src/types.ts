@@ -3,19 +3,23 @@ import {
     MidiIoEventSubtype
 } from "midi-file-io";
 
+/**
+ * I adhered to the names documented here:
+ * https://en.wikipedia.org/wiki/Interval_(music)
+ */
 export enum NoteInterval {
-    PerfectUnison = 1,
-    MinorSecond = 1.5,
-    MajorSecond = 2,
-    MinorThird = 2.5,
-    MajorThird = 3,
-    PerfectFourth = 4,
-    DiminishedFifth = 4.5,
-    PerfectFifth = 5,
-    MinorSixth = 5.5,
-    MajorSixth = 6,
-    MinorSeventh = 6.5,
-    MajorSeventh = 7
+    PerfectUnison = "P1",
+    MinorSecond = "m2",
+    MajorSecond = "M2",
+    MinorThird = "m3",
+    MajorThird = "M3",
+    PerfectFourth = "P4",
+    DiminishedFifth = "d5",
+    PerfectFifth = "P5",
+    MinorSixth = "m6",
+    MajorSixth = "M6",
+    MinorSeventh = "m7",
+    MajorSeventh = "M7"
 }
 
 export interface Composer {
@@ -56,7 +60,7 @@ export interface MidiIoEventAbs extends MidiIoEvent {
     /**
      * See metrics::calculateNoteInterval for more information
      */
-    interval?: number;
+    interval?: string;
     tickOffset: number;
     tickLength: number;
 }
