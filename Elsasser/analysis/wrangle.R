@@ -70,6 +70,7 @@ load_manifest <- function(root = get_asap_root()) {
 #'  so that they carry the `id', `composer`, `year_born`, `year_died`, `title` and
 #'  `performer` (if a performance) in addition to the music variables.
 load_music <- function(df) {
+  canonicals <- generate_canonical_note_range()
   pmap(df, function(id, path, ...) {
     path = file.path(get_asap_root(), path)
     tbl_song <- read_csv(path, show_col_types = FALSE)
@@ -85,13 +86,14 @@ load_music <- function(df) {
     # now we can cultivate the CVS notation
     tbl_song |>
       filter(type == "note") |>
-      # why in the world did I name it tick_length!?
       rename(
-        tick_duration = tick_length,
         pretty = value_pretty
       ) |>
       mutate(
         id = id,
+        # let's try to keep these guys in ascending order by making them ordered
+        # factors. Folks can override it with fct_reorder() if they want to re-level.
+        canonical = fct(canonical, levels = canonicals),
         note = parse_integer(str_match(value_raw, "([0-9]+)")[, 2]),
         # velocity is [0, 127]. We are normalizing it
         velocity = parse_integer(str_match(value_raw, ":([0-9]+)")[, 2]) / 127,
@@ -158,6 +160,18 @@ load_music_by_performer <- function(df, .performer) {
 ##############
 # Internal API
 ##############
+
+generate_canonical_note_range <- function() {
+  result <- c()
+  canonicals <- c("A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab")
+  octaves <- 0:8
+  for(octave in octaves) {
+    for(canonical in canonicals) {
+      result <- c(result, str_c(canonical, octave))
+    }
+  }
+  return(result)
+}
 
 tick_offset_to_seconds <- function(tick_offset, ticks_per_quarter, tempo) {
   # I am not sure whether the ticks_per_quarter is the same for all time-signatures?

@@ -1,4 +1,4 @@
-type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+type,tick_offset,tick_duration,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
 ticks_per_quarter,0,0,480,480,,,,,,
 key_signature,0,0,-3:0,Eb Major,,,,,,
 time_signature,0,0,1:4,1/4,,,,,,

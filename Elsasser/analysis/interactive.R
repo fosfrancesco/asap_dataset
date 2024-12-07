@@ -6,5 +6,14 @@
 # that doesn't not make sense...
 ##
 
-manifest <- load_manifest()
-songs <- load_music(manifest$scores)
+test_load_music <- function() {
+  manifest <- load_manifest()
+  songs <- load_music(manifest$scores)
+}
+
+test_canonical_range <- function() {
+  canonicals <- generate_canonical_note_range()
+  print(canonicals)
+}
+
+test_canonical_range()

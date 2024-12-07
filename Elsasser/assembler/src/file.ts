@@ -1,4 +1,7 @@
-import {format, FormatterRow} from "fast-csv"
+import {
+	format,
+	FormatterRow
+} from "fast-csv"
 import {
 	MidiIoEvent,
 	MidiIoEventSubtype,
@@ -20,8 +23,15 @@ import {
 	formatTimeSignatureValuePretty,
 	formatTimeSignatureValueRaw
 } from "./format";
-import {calculateNoteDensity, calculateNoteInterval} from "./metrics";
-import {MidiIoEventAbs, MidiIoEventSubtypeExt, MidiIoTrackAbs} from "./types";
+import {
+	calculateNoteDensity,
+	calculateNoteInterval
+} from "./metrics";
+import {
+	MidiIoEventAbs,
+	MidiIoEventSubtypeExt,
+	MidiIoTrackAbs
+} from "./types";
 import {round} from "./utils";
 
 /**
@@ -387,8 +397,20 @@ async function writeCSV(path: string, rect: FormatterRow): Promise<void> {
 		let streamCsv = format({
 			// @ts-ignore
 			headers: (encodeWidth === EncodeWidth.Narrow)
-				? ["type", "tick_offset", "tick_length", "value_raw", "value_pretty", "canonical", "density", "interval"]
-				: ["type", "tick_offset", "tick_length", "value_raw", "value_pretty", "canonical", "density", "interval", "tempo", "time_signature", "key_signature"],
+				? ["type", "tick_offset", "tick_duration", "value_raw", "value_pretty", "canonical", "density", "interval"]
+				: [
+					"type",
+					"tick_offset",
+					"tick_duration",
+					"value_raw",
+					"value_pretty",
+					"canonical",
+					"density",
+					"interval",
+					"tempo",
+					"time_signature",
+					"key_signature"
+				],
 			quoteColumns: false
 		});
 		streamCsv.pipe(streamFile);

@@ -1,4 +1,7 @@
-import {MidiIoEvent, MidiIoEventSubtype} from "midi-file-io";
+import {
+	MidiIoEvent,
+	MidiIoEventSubtype
+} from "midi-file-io";
 
 /**
  * I adhered to the names documented here:

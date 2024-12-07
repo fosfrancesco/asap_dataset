@@ -58,7 +58,7 @@ Let's get an idea of what their insides look like.
 ### Composers
 ```{r}
 #| fig-width: 8
-#| fig-height: 6
+#| fig-height: 4
 tbl_scores |>
   nest_by(composer, year_born, year_died) |>
   arrange(year_born) |>

@@ -29,11 +29,18 @@ async function getMidiFileList(pathCSV: string): Promise<string[]> {
 	}, []);
 }
 
+export function toNameCase(name: string): string {
+	return name.match(/^[A-Z]+$/)
+		? name[0] + name.slice(1)
+		.toLowerCase()
+		: name;
+}
+
 async function updateMidiFileList(pathCSV: string): Promise<void> {
 	const csvData: CsvFile = await readCsvFile(pathCSV);
 	csvData.data.forEach((line) => {
 		const composer = getComposer(line.composer);
-		line.performer = line.midi_performance.match(/\/([a-zA-Z]+)[^\/]+$/)[1];
+		line.performer = toNameCase(line.midi_performance.match(/\/([a-zA-Z]+)[^\/]+$/)[1]);
 		line.csv_score = line.midi_score.replace(/\.mid$/, ".csv");
 		line.csv_performance = line.midi_performance.replace(/\.mid$/, ".csv");
 		line.yearBorn = composer.yearBorn;
