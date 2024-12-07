@@ -1,7 +1,7 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,-5:0,Db Major,,,,,,
-timeSignature,0,0,2:2,2/2,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,-5:0,Db Major,,,,,,
+time_signature,0,0,2:2,2/2,,,,,,
 tempo,0,0,555556,108,,,,,,
 note,0,1679,37:96,Db2,Db2,0.0913,P1,108,2/2,Db Major
 note,0,1679,49:96,Db3,Db3,0.0913,M6,108,2/2,Db Major
@@ -53,7 +53,7 @@ note,11040,239,49:92,Db3,Db3,0.2739,M6,216,2/2,Db Major
 note,11040,239,58:92,Bb3,Bb3,0.2739,m3,216,2/2,Db Major
 note,11040,239,61:92,Db4,Db4,0.2739,m6,216,2/2,Db Major
 note,11280,239,41:96,F2,F2,0.1826,P5,216,2/2,Db Major
-timeSignature,11520,0,9:8,9/8,,,,,,
+time_signature,11520,0,9:8,9/8,,,,,,
 note,11520,239,34:96,Bb1,Bb1,0.2739,P1,216,9/8,Db Major
 note,11520,239,46:96,Bb2,Bb2,0.2739,P5,216,9/8,Db Major
 note,11760,239,53:96,F3,F3,0.2282,M3,216,9/8,Db Major
@@ -68,7 +68,7 @@ note,12960,239,49:96,Db3,Db3,0.1826,M6,216,9/8,Db Major
 note,12960,239,58:96,Bb3,Bb3,0.1826,m3,216,9/8,Db Major
 note,12960,239,61:96,Db4,Db4,0.1826,m6,216,9/8,Db Major
 note,13200,479,41:96,F2,F2,0.1369,P5,216,9/8,Db Major
-timeSignature,13680,0,2:2,2/2,,,,,,
+time_signature,13680,0,2:2,2/2,,,,,,
 note,13680,239,34:96,Bb1,Bb1,0.3195,P1,216,2/2,Db Major
 note,13680,239,46:96,Bb2,Bb2,0.3195,P5,216,2/2,Db Major
 note,13920,239,53:96,F3,F3,0.3195,P1,216,2/2,Db Major
@@ -2742,8 +2742,8 @@ note,322160,319,69:80,A4,A4,0.1826,m7,240,2/2,Db Major
 note,322160,319,79:80,G5,G5,0.1826,M3,240,2/2,Db Major
 note,322480,319,75:80,Eb5,Eb5,0.2739,M2,240,2/2,Db Major
 note,322480,319,77:80,F5,F5,0.2739,P5,240,2/2,Db Major
-keySignature,322800,0,-2:0,Bb Major,,,,,,
-keySignature,322800,0,-2:0,Bb Major,,,,,,
+key_signature,322800,0,-2:0,Bb Major,,,,,,
+key_signature,322800,0,-2:0,Bb Major,,,,,,
 tempo,322800,0,333333,180,,,,,,
 note,322800,959,34:80,Bb1,Bb1,0.2282,M3,180,2/2,Bb Major
 note,322800,0,62:80,D4,D4,0.2282,P1,180,2/2,Bb Major

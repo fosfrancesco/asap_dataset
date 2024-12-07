@@ -1,7 +1,7 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,-1:0,F Major,,,,,,
-timeSignature,0,0,4:8,4/8,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,-1:0,F Major,,,,,,
+time_signature,0,0,4:8,4/8,,,,,,
 tempo,0,0,789472,76,,,,,,
 note,0,239,60:25,C4,C4,0.1826,P1,76,4/8,F Major
 note,0,239,72:25,C5,C5,0.1826,P1,76,4/8,F Major
@@ -9,7 +9,7 @@ note,240,479,60:25,C4,C4,0.1826,P1,76,4/8,F Major
 note,240,479,72:25,C5,C5,0.1826,P1,76,4/8,F Major
 note,720,239,60:25,C4,C4,0.1826,P1,76,4/8,F Major
 note,720,239,72:25,C5,C5,0.1826,P1,76,4/8,F Major
-timeSignature,960,0,6:8,6/8,,,,,,
+time_signature,960,0,6:8,6/8,,,,,,
 note,960,479,60:25,C4,C4,0.1826,P1,76,6/8,F Major
 note,960,479,72:25,C5,C5,0.1826,P1,76,6/8,F Major
 note,1440,239,60:25,C4,C4,0.1826,P1,76,6/8,F Major
@@ -728,14 +728,14 @@ note,65040,719,53:112,F3,F3,0.1369,M3,76,6/8,F Major
 note,65280,879,57:112,A3,A3,0.1826,m3,76,6/8,F Major
 note,65440,879,60:112,C4,C4,0.1369,P4,76,6/8,F Major
 note,65600,879,65:112,F4,F4,0.1369,M3,76,6/8,F Major
-timeSignature,65760,0,8:8,8/8,,,,,,
+time_signature,65760,0,8:8,8/8,,,,,,
 note,65760,319,69:112,A4,A4,0.0913,P1,76,8/8,F Major
 note,66080,319,69:112,A4,A4,0.0913,P1,76,8/8,F Major
 note,66400,319,69:112,A4,A4,0.0913,P1,76,8/8,F Major
 note,66720,319,69:112,A4,A4,0.0913,P1,76,8/8,F Major
 note,67040,319,69:112,A4,A4,0.0913,P1,76,8/8,F Major
 note,67360,319,69:112,A4,A4,0.2739,P1,76,8/8,F Major
-timeSignature,67680,0,6:8,6/8,,,,,,
+time_signature,67680,0,6:8,6/8,,,,,,
 tempo,67680,0,454545,132,,,,,,
 note,67680,239,33:127,A1,A1,0.5934,P1,132,6/8,F Major
 note,67680,239,45:127,A2,A2,0.5934,m6,132,6/8,F Major
@@ -3150,8 +3150,8 @@ note,243240,59,35:126,B1,B1,0.639,P1,132,6/8,F Major
 note,243240,59,47:126,B2,B2,0.639,M7,132,6/8,F Major
 note,243300,59,36:126,C2,C2,0.5477,P1,132,6/8,F Major
 note,243300,59,48:126,C3,C3,0.5477,m3,132,6/8,F Major
-keySignature,243360,0,0:0,C Major,,,,,,
-keySignature,243360,0,0:0,C Major,,,,,,
+key_signature,243360,0,0:0,C Major,,,,,,
+key_signature,243360,0,0:0,C Major,,,,,,
 tempo,243360,0,500000,120,,,,,,
 note,243360,239,33:127,A1,A1,0.639,P1,120,6/8,C Major
 note,243360,239,45:127,A2,A2,0.639,m3,120,6/8,C Major

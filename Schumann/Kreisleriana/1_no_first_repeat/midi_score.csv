@@ -1,10 +1,10 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,960,960,,,,,,
-keySignature,0,0,-1:0,F Major,,,,,,
-timeSignature,0,0,1:16,1/16,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,960,960,,,,,,
+key_signature,0,0,-1:0,F Major,,,,,,
+time_signature,0,0,1:16,1/16,,,,,,
 tempo,0,0,500000,120,,,,,,
 note,8,158,57:100,A3,A3,0.2582,m2,120,1/16,F Major
-timeSignature,240,0,2:4,2/4,,,,,,
+time_signature,240,0,2:4,2/4,,,,,,
 tempo,240,0,500000,120,,,,,,
 note,240,158,58:120,Bb3,Bb3,0.2905,d5,120,2/4,F Major
 note,400,158,52:100,E3,E3,0.2905,M6,120,2/4,F Major
@@ -427,8 +427,8 @@ note,45360,478,65:100,F4,F4,0.2259,M3,120,2/4,F Major
 note,45360,478,69:100,A4,A4,0.2259,P4,120,2/4,F Major
 note,45360,478,74:100,D5,D5,0.2259,P1,120,2/4,F Major
 note,45360,478,98:100,D7,D7,0.2259,P5,120,2/4,F Major
-keySignature,45840,0,-2:0,Bb Major,,,,,,
-keySignature,45840,0,-2:0,Bb Major,,,,,,
+key_signature,45840,0,-2:0,Bb Major,,,,,,
+key_signature,45840,0,-2:0,Bb Major,,,,,,
 note,46080,238,79:100,G5,G5,0.1936,M2,120,2/4,Bb Major
 note,46320,158,77:70,F5,F5,0.2259,P5,120,2/4,Bb Major
 note,46480,158,70:70,Bb4,Bb4,0.2259,M3,120,2/4,Bb Major
@@ -996,8 +996,8 @@ note,137840,158,50:100,D3,D3,0.2259,M6,120,2/4,Bb Major
 note,138000,158,41:100,F2,F2,0.2905,P5,120,2/4,Bb Major
 note,138160,158,34:100,Bb1,Bb1,0.2905,M7,120,2/4,Bb Major
 note,138320,158,57:70,A3,A3,0.2905,m2,120,2/4,Bb Major
-keySignature,138480,0,-1:0,F Major,,,,,,
-keySignature,138480,0,-1:0,F Major,,,,,,
+key_signature,138480,0,-1:0,F Major,,,,,,
+key_signature,138480,0,-1:0,F Major,,,,,,
 note,138480,158,58:84,Bb3,Bb3,0.2905,d5,120,2/4,F Major
 note,138640,158,52:70,E3,E3,0.2905,M6,120,2/4,F Major
 note,138800,158,61:70,Db4,Db4,0.2905,M3,120,2/4,F Major

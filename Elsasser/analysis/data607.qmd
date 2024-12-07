@@ -1,4 +1,267 @@
 ---
 title: "DATA 607: Final Project"
 author: "Curtis Elsasser"
+editor_options: 
+  chunk_output_type: console
 ---
+
+## Setup
+```{r}
+#| warning: false
+library(kableExtra)
+library(tidyverse)
+source("wrangle.R")
+```
+
+## Overview
+todo: start with your proposal
+
+### What is MIDI?
+MIDI stands for Musical Instrument Digital Interface. It is a protocol that allows electronic musical instruments, computers, and other devices to communicate with each other. MIDI data is a series of messages that tell a device what notes to play, how loud to play them, and when to play them. The protocol also includes messages that manipulate the playback instrument's properties, creating effects such as pitch-bend, modulation, volume changes, etc.. MIDI files are a way of storing this data so that it can be played back on different devices. MIDI files are not audio files; they do not contain sound. Instead, they contain instructions on how to play a piece of music. This, in my opinion, is what makes them dreamy to work with. Because they are reduced to their most fundamental form, they are easy to manipulate and analyze.
+
+todo: add an excerpt from a midi file and include an excerpt of the same piece being performed by a human.
+
+## Wrangling
+todo: talk about what wrangling we did in this project
+
+## Manifest
+It's not a ship's log, so I don't know if "manifest" is the best description of the file which manages metadata for this repository. It is named [metadata.csv](../../metadata.csv), but that is pretty generic. It doesn't distinguish him from all of the other metadata in this repository. But I couldn't think of a better, short term for it, so I'm sticking with manifest. The manifest contains composer information, the composition title, the performer who performed the performance, the score of the composition and more. We are primarily concerned with the following elements of data:
+
+| Column | Description | Type |
+| --- | --- | --- |
+| `composer` | Composer's last name | `string` |
+| `year_born` | Composer's birth year (Wikipedia) | `integer` |
+| `year_died` | Composer's death year (Wikipedia) | `integer` |
+| `title` | Composition's title | `string` |
+| `performer` | The performer. Extracted from `midi_performance` | `string` |
+| `midi_score` | The score. Relative path to the MIDI file | `string` |
+| `midi_performance` | The performance. Relative path to the MIDI file  | `string` |
+| `csv_score` | The score CSV. Relative path to the CSV file | `string` |
+| `csv_performance` | The performance CSV. Relative path to the CSV file | `string` |
+
+:::{.callout-note}
+### Performance vs. Score
+The performance and score are very closely related, but they are not the same. The score is the composition as written by the composer. The performance is the composition as played by the performer. Classical is a very structured genre, but the performance of it is very expressive. It's difficult to reproduce it in it's entirety with metadata. Where the tempo, key-signature and time-signature are meaningful in the score, they are meaningless in the performances in this repository. According to their metadata they all look as if the were written in 4/4, the key of C and at 120 BPM. This is not the case. The performances are all unique and expressive. The score is the blueprint, the performance is the building.
+:::
+
+The manifest is the key to the dataset. It tells us where to find the data and how to interpret it. And that is where we shall start.
+
+### Load
+```{r}
+tbl_manifest <- load_manifest()
+tbl_scores <- tbl_manifest$scores
+tbl_perfs <- tbl_manifest$perfs
+```
+
+Let's get an idea of what their insides look like.
+
+### Composers
+```{r}
+#| fig-width: 8
+#| fig-height: 6
+tbl_scores |>
+  nest_by(composer, year_born, year_died) |>
+  arrange(year_born) |>
+  mutate(composer = factor(composer)) |>
+  ggplot(mapping = aes(x = year_born, y = composer, color = composer)) +
+  geom_segment(mapping = aes(xend = year_died), linewidth = 6, show.legend = FALSE) +
+  labs(
+    title = "Composers and their Lifespans", 
+    x = "Lifetime", 
+    y = "Composer"
+  )
+  
+```
+
+### Scores
+
+Follows is a list of all 235 scores in the repository. It's long but I think it gives an excellent overview of the dataset. So I'm going to tuck it into a collapsible note. I shall determine his fate later.
+
+:::{.callout-note collapse="true"}
+#### Compositions
+```{r}
+tbl_scores |>
+  select(id:title) |>
+  kable()
+```
+:::
+
+
+### Performances
+There are a total of 1067 performances. Being so long, I'm not going to tuck him into a collapsible note. Rather, let's zoom in on a single composition; let's see who has performed "Fugue bwv 846" by Bach. 
+
+```{r}
+tbl_perfs |>
+  filter(title == "Fugue bwv 846") |>
+  select(id, composer, title, performer) |>
+  kable()
+```
+
+There is only one performer for "Fugue bwv 846" in the dataset, so let's go with a juicier one, "Fugue bwv 848"
+
+```{r}
+tbl_perfs |>
+  filter(title == "Fugue bwv 848") |>
+  select(id, composer, title, performer) |>
+  kable()
+```
+
+Here ends our brief glimpse into the dataset. We shall now delve into the music data itself.
+
+## Music
+Music is stored in various ways in the ASAP repository. The format that we have cultivated and by far are the most interested in (as data scientists) is the CSV format. Follows is a schema of our internal representation of a composition:
+
+| Column | Description | Type |
+| --- | --- | --- |
+| `id` | The composition ID | `integer` |
+| `composer` | The composer of the piece | `string` |
+| `year_born` | The composer's birth year (Wikipedia) | `integer` |
+| `year_died` | The composer's death year (Wikipedia) | `integer` |
+| `title` | The composition's title | `string` |
+| `performer` | The performer. Extracted from `midi_performance`. `NA` for scores | `string`\|`NA` |
+| `type` | The type of data. Music is all `note` | `string` |
+| `time_offset` | The number of seconds from the beginning | `float` |
+| `time_duration` | The duration in seconods | `float` |
+| `tick_offset` | The number of MIDI ticks from the beginning | `integer` |
+| `tick_duration` | The duration in MIDI ticks | `integer` |
+| `note` | The MIDI value of the note | `integer` |
+| `velocity` | The velocity of the note, [0, 1] | `integer` |
+| `pretty` | The named representation of the note. Matches key-signature's spelling | `string` |
+| `canonical` | The canonical representation of the note. We always use the flat equivalent | `string` |
+| `density` | How dense notes are in the vicinity of this note. | `float` |
+| `interval` | The interval between this note and the following note | `string` |
+| `tempo` | The tempo of the current point in the piece | `integer` |
+| `key_signature` | The key signature at this point in the piece | `string` |
+| `time_signature` | The time signature at this point in the piece | `string` |
+| `ticks_per_quarter` | The number of ticks in a quarter note | `integer` |
+
+
+### Sample
+```{r}
+tbl_fugue_bwv_846 <- load_music_by_title(tbl_scores, "Fugue bwv 846")[[1]]
+tbl_fugue_bwv_846 |>
+  head() |>
+  kable()
+```
+
+```{r}
+tbl_fugue_bwv_848 <- load_music_by_title(tbl_perfs, "Fugue bwv 848") |>
+  bind_rows()
+```
+
+```{r}
+tbl_music_perfs <- load_music(tbl_perfs) |>
+  bind_rows()
+```
+
+
+### Visualization
+```{r}
+#| fig-width: 9
+#| fig-height: 6
+
+tbl_fugue_bwv_846 |>
+  group_by(canonical) |>
+  summarise(n = n()) |>
+  arrange(desc(n)) |>
+  mutate(
+    canonical = factor(canonical, levels = canonical)
+  ) |>
+  ggplot(mapping = aes(x = canonical, y = n)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = str_c(
+      "Frequency of Notes in ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer
+    ),
+    x = "Note",
+    y = "Frequency"
+  )
+
+```
+
+```{r}
+#| fig-width: 6
+#| fig-height: 5
+
+tbl_fugue_bwv_846 |>
+  group_by(interval) |>
+  summarise(n = n()) |>
+  arrange(desc(n)) |>
+  mutate(
+    interval = factor(interval, levels = interval)
+  ) |>
+  ggplot(mapping = aes(x = interval, y = n)) +
+  geom_bar(stat = "identity") +
+  labs(
+    title = str_c(
+      "Frequency of Intervals in ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer
+    ),
+    x = "Interval",
+    y = "Frequency"
+  )
+
+```
+
+
+```{r}
+#| fig-width: 10
+tbl_fugue_bwv_848 |>
+  ggplot(mapping = aes(x = time_offset, y = velocity, color = performer)) +
+  geom_line() +
+  labs(
+    title = str_c(
+      "Velocity in ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer
+    ),
+    x = "Time",
+    y = "Velocity"
+  )
+
+  
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+tbl_fugue_bwv_848 |>
+  ggplot(mapping = aes(x = velocity, color = performer)) +
+  geom_histogram(bins = 30) +
+  labs(
+    title = str_c(
+      "Velocity histogram for ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer
+    ),
+  ) +
+  facet_wrap(~performer)
+```
+
+```{r}
+#| warning: false
+#| fig-width: 10
+tbl_fugue_bwv_848 |>
+  group_by(performer, canonical) |>
+  summarise(
+    count = n()
+  ) |>
+  ggplot(mapping = aes(x = canonical, y = count, color = performer)) +
+    geom_col(position = "dodge")
+```
+

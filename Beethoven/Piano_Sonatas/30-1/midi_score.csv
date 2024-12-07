@@ -1,14 +1,14 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,4:0,E Major,,,,,,
-timeSignature,0,0,1:4,1/4,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,4:0,E Major,,,,,,
+time_signature,0,0,1:4,1/4,,,,,,
 tempo,0,0,416667,144,,,,,,
 note,0,0,68:49,G#4,Ab4,0.3195,P1,144,1/4,E Major
 note,0,479,68:49,G#4,Ab4,0.3195,m3,144,1/4,E Major
 note,120,359,71:49,B4,B4,0.2739,P5,144,1/4,E Major
 note,240,119,52:49,E3,E3,0.2739,P5,144,1/4,E Major
 note,360,119,59:49,B3,B3,0.2739,P1,144,1/4,E Major
-timeSignature,480,0,2:4,2/4,,,,,,
+time_signature,480,0,2:4,2/4,,,,,,
 note,480,0,71:49,B4,B4,0.3195,P1,144,2/4,E Major
 note,480,479,71:49,B4,B4,0.3195,P4,144,2/4,E Major
 note,600,359,66:49,F#4,Gb4,0.2739,m3,144,2/4,E Major
@@ -94,7 +94,7 @@ note,7680,479,73:93,C#5,Db5,0.3195,M6,144,2/4,E Major
 note,7800,359,82:93,A#5,Bb5,0.2739,M3,144,2/4,E Major
 note,7920,119,42:93,F#2,Gb2,0.6847,P1,144,2/4,E Major
 note,8040,119,54:93,F#3,Gb3,0.6847,m3,144,2/4,E Major
-timeSignature,8160,0,3:4,3/4,,,,,,
+time_signature,8160,0,3:4,3/4,,,,,,
 tempo,8160,0,833333,72,,,,,,
 note,8160,59,69:96,A4,A4,0.6847,m3,72,3/4,E Major
 note,8220,59,72:96,C5,C5,0.639,m3,72,3/4,E Major
@@ -346,7 +346,7 @@ note,16720,39,76:96,E5,E5,0.9129,M6,72,3/4,E Major
 note,16720,39,85:96,C#6,Db6,0.9129,P1,72,3/4,E Major
 note,16760,39,73:96,C#5,Db5,0.8672,M6,72,3/4,E Major
 note,16760,39,82:96,A#5,Bb5,0.8672,M7,72,3/4,E Major
-timeSignature,16800,0,5:4,5/4,,,,,,
+time_signature,16800,0,5:4,5/4,,,,,,
 note,16800,119,71:96,B4,B4,0.8672,M3,72,5/4,E Major
 note,16800,119,75:96,D#5,Eb5,0.8672,m6,72,5/4,E Major
 note,16800,39,83:96,B5,B5,0.8672,m2,72,5/4,E Major
@@ -401,7 +401,7 @@ note,18720,119,76:54,E5,E5,0.3195,M2,40,5/4,E Major
 note,18840,119,78:54,F#5,Gb5,0.3195,M2,40,5/4,E Major
 note,18960,119,80:54,G#5,Ab5,0.3195,M2,40,5/4,E Major
 note,19080,119,82:54,A#5,Bb5,0.3195,P5,40,5/4,E Major
-timeSignature,19200,0,1:4,1/4,,,,,,
+time_signature,19200,0,1:4,1/4,,,,,,
 tempo,19200,0,416667,144,,,,,,
 note,19200,0,63:49,D#4,Eb4,0.3651,P1,144,1/4,E Major
 note,19200,479,63:49,D#4,Eb4,0.3651,m6,144,1/4,E Major
@@ -409,7 +409,7 @@ note,19200,239,83:49,B5,B5,0.3651,P4,144,1/4,E Major
 note,19320,359,66:49,F#4,Gb4,0.2739,P4,144,1/4,E Major
 note,19440,119,71:49,B4,B4,0.2739,P5,144,1/4,E Major
 note,19560,119,78:49,F#5,Gb5,0.2739,P1,144,1/4,E Major
-timeSignature,19680,0,2:4,2/4,,,,,,
+time_signature,19680,0,2:4,2/4,,,,,,
 note,19680,0,66:49,F#4,Gb4,0.3195,P1,144,2/4,E Major
 note,19680,479,66:49,F#4,Gb4,0.3195,P4,144,2/4,E Major
 note,19800,359,61:49,C#4,Db4,0.2739,m7,144,2/4,E Major
@@ -935,7 +935,7 @@ note,59520,479,78:86,F#5,Gb5,0.3195,M6,144,2/4,E Major
 note,59640,359,87:86,D#6,Eb6,0.2739,M3,144,2/4,E Major
 note,59760,119,47:86,B2,B2,0.6847,P1,144,2/4,E Major
 note,59880,119,35:86,B1,B1,0.6847,m3,144,2/4,E Major
-timeSignature,60000,0,3:4,3/4,,,,,,
+time_signature,60000,0,3:4,3/4,,,,,,
 tempo,60000,0,833333,72,,,,,,
 note,60000,59,74:86,D5,D5,0.6847,m3,72,3/4,E Major
 note,60060,59,77:86,F5,F5,0.639,m3,72,3/4,E Major
@@ -1275,7 +1275,7 @@ note,69960,39,44:49,G#2,Ab2,0.4564,P4,72,3/4,E Major
 note,70000,79,39:49,D#2,Eb2,0.4564,m6,72,3/4,E Major
 note,70000,39,47:49,B2,B2,0.4564,P4,72,3/4,E Major
 note,70040,39,42:49,F#2,Gb2,0.3651,M2,72,3/4,E Major
-timeSignature,70080,0,11:8,11/8,,,,,,
+time_signature,70080,0,11:8,11/8,,,,,,
 note,70080,479,28:49,E1,E1,0.3651,P1,72,11/8,E Major
 note,70080,79,40:49,E2,E2,0.3651,P5,72,11/8,E Major
 note,70160,79,47:49,B2,B2,0.3195,m3,72,11/8,E Major
@@ -1306,14 +1306,14 @@ note,72000,239,88:49,E6,E6,0.1369,P4,30,11/8,E Major
 tempo,72240,0,1500000,40,,,,,,
 note,72240,239,83:49,B5,B5,0.1826,m2,40,11/8,E Major
 note,72480,239,84:49,C6,C6,0.2282,m2,40,11/8,E Major
-timeSignature,72720,0,1:4,1/4,,,,,,
+time_signature,72720,0,1:4,1/4,,,,,,
 tempo,72720,0,416667,144,,,,,,
 note,72720,0,85:49,C#6,Db6,0.3195,P1,144,1/4,E Major
 note,72720,479,85:49,C#6,Db6,0.3195,m3,144,1/4,E Major
 note,72840,359,88:49,E6,E6,0.2739,P5,144,1/4,E Major
 note,72960,119,69:49,A4,A4,0.2739,P5,144,1/4,E Major
 note,73080,119,76:49,E5,E5,0.2739,P1,144,1/4,E Major
-timeSignature,73200,0,2:4,2/4,,,,,,
+time_signature,73200,0,2:4,2/4,,,,,,
 note,73200,0,88:49,E6,E6,0.3195,P1,144,2/4,E Major
 note,73200,479,88:49,E6,E6,0.3195,P4,144,2/4,E Major
 note,73320,359,83:49,B5,B5,0.2739,P5,144,2/4,E Major
@@ -1650,5 +1650,5 @@ note,104400,959,47:49,B2,B2,0.2739,P4,72,2/4,E Major
 note,104400,959,52:49,E3,E3,0.2739,M3,72,2/4,E Major
 note,104400,959,56:49,G#3,Ab3,0.2739,m3,72,2/4,E Major
 note,104400,959,59:49,B3,B3,0.2739,,72,2/4,E Major
-timeSignature,104880,0,1:4,1/4,,,,,,
+time_signature,104880,0,1:4,1/4,,,,,,
 tempo,104880,0,833333,72,,,,,,

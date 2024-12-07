@@ -33,6 +33,7 @@ async function updateMidiFileList(pathCSV: string): Promise<void> {
 	const csvData: CsvFile = await readCsvFile(pathCSV);
 	csvData.data.forEach((line) => {
 		const composer = getComposer(line.composer);
+		line.performer = line.midi_performance.match(/\/([a-zA-Z]+)[^\/]+$/)[1];
 		line.csv_score = line.midi_score.replace(/\.mid$/, ".csv");
 		line.csv_performance = line.midi_performance.replace(/\.mid$/, ".csv");
 		line.yearBorn = composer.yearBorn;
@@ -41,14 +42,17 @@ async function updateMidiFileList(pathCSV: string): Promise<void> {
 	if (csvData.header.indexOf("csv_score") < 0) {
 		csvData.header.push("csv_score");
 	}
+	if (csvData.header.indexOf("performer") < 0) {
+		csvData.header.splice(csvData.header.indexOf("midi_score") + 1, 0, "performer");
+	}
 	if (csvData.header.indexOf("csv_performance") < 0) {
 		csvData.header.push("csv_performance");
 	}
-	if (csvData.header.indexOf("yearBorn") < 0) {
-		csvData.header.splice(csvData.header.indexOf("composer") + 1, 0, "yearBorn");
+	if (csvData.header.indexOf("year_born") < 0) {
+		csvData.header.splice(csvData.header.indexOf("composer") + 1, 0, "year_born");
 	}
-	if (csvData.header.indexOf("yearDied") < 0) {
-		csvData.header.splice(csvData.header.indexOf("yearBorn") + 1, 0, "yearDied");
+	if (csvData.header.indexOf("year_died") < 0) {
+		csvData.header.splice(csvData.header.indexOf("year_born") + 1, 0, "year_died");
 	}
 	return new Promise((resolve, reject) => {
 		writeToPath(pathCSV, csvData.data, {headers: csvData.header})

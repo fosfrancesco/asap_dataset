@@ -1,7 +1,4 @@
-import {
-	MidiIoEvent,
-	MidiIoEventSubtype
-} from "midi-file-io";
+import {MidiIoEvent, MidiIoEventSubtype} from "midi-file-io";
 
 /**
  * I adhered to the names documented here:
@@ -37,6 +34,7 @@ export interface CsvFile {
 		folder: string,
 		xml_score: string,
 		midi_score: string,
+		performer: string,
 		midi_performance: string,
 		performance_annotations: string,
 		midi_score_annotations: string,

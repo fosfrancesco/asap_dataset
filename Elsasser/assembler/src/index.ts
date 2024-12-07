@@ -2,7 +2,7 @@ import {Command} from "commander"
 import {version} from "../package.json"
 import * as dump from "./dump";
 import * as file from "./file";
-import * as list from "./list";
+import * as manifest from "./manifest";
 
 // ********************************************************************
 // Entry Point
@@ -26,7 +26,7 @@ program
 	.command("list")
 	.argument("<pathCSV>", "Path to the source manifest file")
 	.action(async (pathCSV: string): Promise<void> => {
-		return list.execute(pathCSV);
+		return manifest.execute(pathCSV);
 	});
 
 program

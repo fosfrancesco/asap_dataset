@@ -1,7 +1,7 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,-4:0,Ab Major,,,,,,
-timeSignature,0,0,3:4,3/4,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,-4:0,Ab Major,,,,,,
+time_signature,0,0,3:4,3/4,,,,,,
 tempo,0,0,500000,120,,,,,,
 note,0,239,44:60,Ab2,Ab2,0.4108,m3,120,3/4,Ab Major
 note,0,119,83:60,B5,B5,0.4108,M3,120,3/4,Ab Major
@@ -1481,8 +1481,8 @@ note,152160,119,63:110,Eb4,Eb4,0.2739,m3,120,3/4,Ab Major
 note,152280,119,66:110,Gb4,Gb4,0.2282,m3,120,3/4,Ab Major
 note,152400,119,63:110,Eb4,Eb4,0.4108,P5,120,3/4,Ab Major
 note,152520,119,56:110,Ab3,Ab3,0.3651,P5,120,3/4,Ab Major
-keySignature,152640,0,4:0,E Major,,,,,,
-keySignature,152640,0,4:0,E Major,,,,,,
+key_signature,152640,0,4:0,E Major,,,,,,
+key_signature,152640,0,4:0,E Major,,,,,,
 note,152640,239,37:70,C#2,Db2,0.5477,P5,120,3/4,E Major
 note,152640,1439,68:70,G#4,Ab4,0.5477,P1,120,3/4,E Major
 note,152880,239,44:70,G#2,Ab2,0.6847,P4,120,3/4,E Major
@@ -2950,8 +2950,8 @@ note,235680,239,61:60,C#4,Db4,0.3651,m7,120,3/4,E Major
 note,235920,239,51:60,D#3,Eb3,0.3195,P5,120,3/4,E Major
 note,235920,239,58:60,A#3,Bb3,0.3195,m3,120,3/4,E Major
 note,235920,239,61:60,C#4,Db4,0.3195,m7,120,3/4,E Major
-keySignature,236160,0,-4:0,Ab Major,,,,,,
-keySignature,236160,0,-4:0,Ab Major,,,,,,
+key_signature,236160,0,-4:0,Ab Major,,,,,,
+key_signature,236160,0,-4:0,Ab Major,,,,,,
 note,236160,239,39:70,Eb2,Eb2,0.4108,M3,120,3/4,Ab Major
 note,236160,119,67:70,G4,G4,0.4108,m3,120,3/4,Ab Major
 note,236280,119,70:70,Bb4,Bb4,0.3651,m3,120,3/4,Ab Major

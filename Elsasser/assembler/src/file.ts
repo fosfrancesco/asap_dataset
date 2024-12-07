@@ -256,7 +256,7 @@ function rectanglifyNarrow(track: MidiIoTrackAbs): any[] {
 		} else if (event.subtype === MidiIoEventSubtype.KeySignature) {
 			eventKS = event;
 			return [
-				"keySignature",
+				"key_signature",
 				event.tickOffset,
 				event.tickLength,
 				formatKeySignatureValueRaw(event),
@@ -264,7 +264,7 @@ function rectanglifyNarrow(track: MidiIoTrackAbs): any[] {
 			];
 		} else if (event.subtype === MidiIoEventSubtype.TimeSignature) {
 			return [
-				"timeSignature",
+				"time_signature",
 				event.tickOffset,
 				event.tickLength,
 				formatTimeSignatureValueRaw(event),
@@ -272,7 +272,7 @@ function rectanglifyNarrow(track: MidiIoTrackAbs): any[] {
 			]
 		} else if (event.subtype === MidiIoEventSubtypeExt.TicksPerQuarter) {
 			return [
-				"ticksPerQuarter",
+				"ticks_per_quarter",
 				event.tickOffset,
 				event.tickLength,
 				event.value,
@@ -324,7 +324,7 @@ function rectanglifyWide(track: MidiIoTrackAbs): any[] {
 		} else if (event.subtype === MidiIoEventSubtype.KeySignature) {
 			lastKS = event;
 			return [
-				"keySignature",
+				"key_signature",
 				event.tickOffset,
 				event.tickLength,
 				formatKeySignatureValueRaw(event),
@@ -333,7 +333,7 @@ function rectanglifyWide(track: MidiIoTrackAbs): any[] {
 		} else if (event.subtype === MidiIoEventSubtype.TimeSignature) {
 			lastTS = event;
 			return [
-				"timeSignature",
+				"time_signature",
 				event.tickOffset,
 				event.tickLength,
 				formatTimeSignatureValueRaw(event),
@@ -341,7 +341,7 @@ function rectanglifyWide(track: MidiIoTrackAbs): any[] {
 			]
 		} else if (event.subtype === MidiIoEventSubtypeExt.TicksPerQuarter) {
 			return [
-				"ticksPerQuarter",
+				"ticks_per_quarter",
 				event.tickOffset,
 				event.tickLength,
 				event.value,
@@ -387,8 +387,8 @@ async function writeCSV(path: string, rect: FormatterRow): Promise<void> {
 		let streamCsv = format({
 			// @ts-ignore
 			headers: (encodeWidth === EncodeWidth.Narrow)
-				? ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density", "interval"]
-				: ["type", "tickOffset", "tickLength", "valueRaw", "valuePretty", "canonical", "density", "interval", "tempo", "timeSignature", "keySignature"],
+				? ["type", "tick_offset", "tick_length", "value_raw", "value_pretty", "canonical", "density", "interval"]
+				: ["type", "tick_offset", "tick_length", "value_raw", "value_pretty", "canonical", "density", "interval", "tempo", "time_signature", "key_signature"],
 			quoteColumns: false
 		});
 		streamCsv.pipe(streamFile);

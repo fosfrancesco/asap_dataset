@@ -1,7 +1,7 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,1:0,G Major,,,,,,
-timeSignature,0,0,1:4,1/4,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,1:0,G Major,,,,,,
+time_signature,0,0,1:4,1/4,,,,,,
 tempo,0,0,400000,150,,,,,,
 note,0,239,40:96,E2,E2,0.5477,P1,150,1/4,G Major
 note,0,239,52:96,E3,E3,0.5477,m3,150,1/4,G Major
@@ -9,7 +9,7 @@ note,0,239,55:96,G3,G3,0.5477,M3,150,1/4,G Major
 note,0,239,59:96,B3,B3,0.5477,P4,150,1/4,G Major
 note,0,239,64:96,E4,E4,0.5477,m3,150,1/4,G Major
 note,0,239,67:96,G4,G4,0.5477,m3,150,1/4,G Major
-timeSignature,480,0,3:4,3/4,,,,,,
+time_signature,480,0,3:4,3/4,,,,,,
 note,480,959,40:96,E2,E2,0.2739,P1,150,3/4,G Major
 note,480,959,52:96,E3,E3,0.2739,m3,150,3/4,G Major
 note,480,959,55:96,G3,G3,0.2739,M3,150,3/4,G Major
@@ -1371,8 +1371,8 @@ note,168480,119,81:49,A5,A5,0.2739,M3,150,3/4,G Major
 note,168600,119,77:49,F5,F5,0.2282,M3,150,3/4,G Major
 note,168720,119,81:49,A5,A5,0.2282,m3,150,3/4,G Major
 note,168840,119,84:49,C6,C6,0.2282,m3,150,3/4,G Major
-keySignature,168960,0,0:0,C Major,,,,,,
-keySignature,168960,0,0:0,C Major,,,,,,
+key_signature,168960,0,0:0,C Major,,,,,,
+key_signature,168960,0,0:0,C Major,,,,,,
 note,168960,119,81:50,A5,A5,0.2739,M3,150,3/4,C Major
 note,169080,119,77:50,F5,F5,0.2739,M3,150,3/4,C Major
 note,169200,119,81:50,A5,A5,0.2739,P4,150,3/4,C Major
@@ -1562,8 +1562,8 @@ note,185760,119,85:94,C#6,Db6,0.3651,d5,150,3/4,C Major
 note,185880,119,79:94,G5,G5,0.3195,d5,150,3/4,C Major
 note,186000,119,85:94,C#6,Db6,0.3195,m3,150,3/4,C Major
 note,186120,119,88:94,E6,E6,0.3195,P4,150,3/4,C Major
-keySignature,186240,0,1:0,G Major,,,,,,
-keySignature,186240,0,1:0,G Major,,,,,,
+key_signature,186240,0,1:0,G Major,,,,,,
+key_signature,186240,0,1:0,G Major,,,,,,
 note,186240,0,59:96,B3,B3,0.3651,P1,150,3/4,G Major
 note,186240,1439,59:96,B3,B3,0.3651,P1,150,3/4,G Major
 note,186240,119,83:96,B5,B5,0.3651,M3,150,3/4,G Major

@@ -7,7 +7,6 @@
 	},
 	"description": "Converts a MIDI file to a CSV file.",
 	"devDependencies": {
-		"@types/fs-extra": "11.0.4",
 		"@types/jest": "29.5.14",
 		"@types/node": "22.10.0",
 		"jest": "29.7.0",

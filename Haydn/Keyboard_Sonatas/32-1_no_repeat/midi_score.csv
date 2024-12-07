@@ -1,7 +1,7 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,2:0,D Major,,,,,,
-timeSignature,0,0,4:4,4/4,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,2:0,D Major,,,,,,
+time_signature,0,0,4:4,4/4,,,,,,
 tempo,0,0,500000,120,,,,,,
 note,0,58,61:90,C#4,Db4,0.2739,M2,120,4/4,D Major
 note,59,58,59:90,B3,B3,0.2282,M2,120,4/4,D Major

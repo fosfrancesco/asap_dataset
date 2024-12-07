@@ -1,11 +1,11 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,4:0,E Major,,,,,,
-timeSignature,0,0,1:8,1/8,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,4:0,E Major,,,,,,
+time_signature,0,0,1:8,1/8,,,,,,
 tempo,0,0,857140,70,,,,,,
 note,0,119,64:49,E4,E4,0.3651,M2,70,1/8,E Major
 note,120,119,66:49,F#4,Gb4,0.3651,M2,70,1/8,E Major
-timeSignature,240,0,2:4,2/4,,,,,,
+time_signature,240,0,2:4,2/4,,,,,,
 note,240,239,40:49,E2,E2,0.4108,P1,70,2/4,E Major
 note,240,239,52:49,E3,E3,0.4108,P1,70,2/4,E Major
 note,240,119,64:49,E4,E4,0.4108,M3,70,2/4,E Major
@@ -1531,8 +1531,8 @@ note,99840,119,75:96,D#5,Eb5,0.5021,d5,70,2/4,E Major
 note,99840,119,81:96,A5,A5,0.5021,d5,70,2/4,E Major
 note,99840,119,87:96,D#6,Eb6,0.5021,M3,70,2/4,E Major
 note,99960,119,59:96,B3,B3,0.3651,P4,70,2/4,E Major
-keySignature,100080,0,1:0,G Major,,,,,,
-keySignature,100080,0,1:0,G Major,,,,,,
+key_signature,100080,0,1:0,G Major,,,,,,
+key_signature,100080,0,1:0,G Major,,,,,,
 note,100080,119,64:96,E4,E4,0.3651,P1,70,2/4,G Major
 note,100080,239,76:96,E5,E5,0.3651,m3,70,2/4,G Major
 note,100080,239,79:96,G5,G5,0.3651,M6,70,2/4,G Major
@@ -1590,8 +1590,8 @@ note,103680,119,40:72,E2,E2,0.5021,m7,70,2/4,G Major
 note,103680,119,86:72,D6,D6,0.5021,m3,70,2/4,G Major
 note,103680,119,89:72,F6,F6,0.5021,m2,70,2/4,G Major
 note,103800,119,52:73,E3,E3,0.4108,M2,70,2/4,G Major
-keySignature,103920,0,0:0,C Major,,,,,,
-keySignature,103920,0,0:0,C Major,,,,,,
+key_signature,103920,0,0:0,C Major,,,,,,
+key_signature,103920,0,0:0,C Major,,,,,,
 note,103920,119,38:74,D2,D2,0.5021,P1,70,2/4,C Major
 note,103920,119,86:74,D6,D6,0.5021,m3,70,2/4,C Major
 note,103920,119,89:74,F6,F6,0.5021,m3,70,2/4,C Major
@@ -1769,8 +1769,8 @@ note,117840,479,73:49,C#5,Db5,0.4108,m3,70,2/4,C Major
 note,117840,479,76:49,E5,E5,0.4108,m3,70,2/4,C Major
 note,118000,159,61:49,C#4,Db4,0.2739,P4,70,2/4,C Major
 note,118160,159,56:49,G#3,Ab3,0.2739,M2,70,2/4,C Major
-keySignature,118320,0,4:0,E Major,,,,,,
-keySignature,118320,0,4:0,E Major,,,,,,
+key_signature,118320,0,4:0,E Major,,,,,,
+key_signature,118320,0,4:0,E Major,,,,,,
 note,118320,159,54:49,F#3,Gb3,0.3651,m3,70,2/4,E Major
 note,118320,479,69:49,A4,A4,0.3651,d5,70,2/4,E Major
 note,118320,479,75:49,D#5,Eb5,0.3651,P1,70,2/4,E Major
@@ -2965,8 +2965,8 @@ note,199440,119,53:96,F3,F3,0.3195,M6,70,2/4,E Major
 note,199560,119,62:96,D4,D4,0.3195,m3,70,2/4,E Major
 note,199680,119,59:96,B3,B3,0.3195,m3,70,2/4,E Major
 note,199800,119,56:96,G#3,Ab3,0.3195,d5,70,2/4,E Major
-keySignature,199920,0,0:0,C Major,,,,,,
-keySignature,199920,0,0:0,C Major,,,,,,
+key_signature,199920,0,0:0,C Major,,,,,,
+key_signature,199920,0,0:0,C Major,,,,,,
 note,199920,119,50:96,D3,D3,0.3195,m3,70,2/4,C Major
 note,199920,1079,77:96,F5,F5,0.3195,P1,70,2/4,C Major
 note,199920,1079,89:96,F6,F6,0.3195,d5,70,2/4,C Major
@@ -3056,8 +3056,8 @@ note,208080,239,77:33,F5,F5,0.3195,M6,70,2/4,C Major
 note,208320,479,56:33,G#3,Ab3,0.3195,m3,70,2/4,C Major
 note,208320,479,59:33,B3,B3,0.3195,M2,70,2/4,C Major
 note,208320,239,73:33,C#5,Db5,0.3195,P4,70,2/4,C Major
-keySignature,208560,0,4:0,E Major,,,,,,
-keySignature,208560,0,4:0,E Major,,,,,,
+key_signature,208560,0,4:0,E Major,,,,,,
+key_signature,208560,0,4:0,E Major,,,,,,
 note,208560,239,78:33,F#5,Gb5,0.2282,P1,70,2/4,E Major
 note,208800,479,54:33,F#3,Gb3,0.3195,M3,70,2/4,E Major
 note,208800,479,58:33,A#3,Bb3,0.3195,m3,70,2/4,E Major
@@ -4033,7 +4033,7 @@ note,277440,239,61:49,C#4,Db4,0.4108,m3,70,2/4,E Major
 note,277440,239,64:49,E4,E4,0.4108,P1,70,2/4,E Major
 note,277440,119,88:49,E6,E6,0.4108,m6,70,2/4,E Major
 note,277560,119,80:49,G#5,Ab5,0.3195,M7,70,2/4,E Major
-timeSignature,277680,0,3:8,3/8,,,,,,
+time_signature,277680,0,3:8,3/8,,,,,,
 note,277680,239,57:33,A3,A3,0.3651,M6,70,3/8,E Major
 note,277680,119,78:33,F#5,Gb5,0.3651,P5,70,3/8,E Major
 note,277800,119,85:33,C#6,Db6,0.2739,M2,70,3/8,E Major

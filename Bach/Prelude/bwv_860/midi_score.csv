@@ -1,7 +1,7 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,1:0,G Major,,,,,,
-timeSignature,0,0,24:16,24/16,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,1:0,G Major,,,,,,
+time_signature,0,0,24:16,24/16,,,,,,
 tempo,0,0,333333,180,,,,,,
 note,0,359,55:80,G3,G3,0.3195,P1,180,24/16,G Major
 note,0,119,67:80,G4,G4,0.3195,M3,180,24/16,G Major

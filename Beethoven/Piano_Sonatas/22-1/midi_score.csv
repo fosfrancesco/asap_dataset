@@ -1,11 +1,11 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,-1:0,F Major,,,,,,
-timeSignature,0,0,1:4,1/4,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,-1:0,F Major,,,,,,
+time_signature,0,0,1:4,1/4,,,,,,
 tempo,0,0,599999,100,,,,,,
 note,0,359,48:49,C3,C3,0.2739,M3,100,1/4,F Major
 note,360,119,52:49,E3,E3,0.2282,M7,100,1/4,F Major
-timeSignature,480,0,3:4,3/4,,,,,,
+time_signature,480,0,3:4,3/4,,,,,,
 note,480,479,29:49,F1,F1,0.2739,P1,100,3/4,F Major
 note,480,719,41:49,F2,F2,0.2739,M3,100,3/4,F Major
 note,480,479,45:49,A2,A2,0.2739,m6,100,3/4,F Major
@@ -2716,7 +2716,7 @@ note,194759,58,72:1,C5,C5,0.5934,m2,100,3/4,F Major
 note,194760,59,71:64,B4,B4,0.639,m3,100,3/4,F Major
 note,194819,58,74:1,D5,D5,0.6847,M2,100,3/4,F Major
 note,194820,60,72:64,C5,C5,0.639,P1,100,3/4,F Major
-timeSignature,194880,0,4:4,4/4,,,,,,
+time_signature,194880,0,4:4,4/4,,,,,,
 note,194880,119,72:1,C5,C5,0.6847,M2,100,4/4,F Major
 note,194939,58,74:1,D5,D5,0.639,M2,100,4/4,F Major
 note,194999,120,72:1,C5,C5,0.5934,M2,100,4/4,F Major
@@ -2742,7 +2742,7 @@ note,196200,59,64:64,E4,E4,0.1369,M3,52,4/4,F Major
 tempo,196320,0,599999,100,,,,,,
 note,196320,359,60:64,C4,C4,0.2739,P4,100,4/4,F Major
 note,196680,119,65:64,F4,F4,0.3195,P1,100,4/4,F Major
-timeSignature,196800,0,3:4,3/4,,,,,,
+time_signature,196800,0,3:4,3/4,,,,,,
 note,196800,0,29:64,F1,F1,0.3195,P1,100,3/4,F Major
 note,196800,1439,29:64,F1,F1,0.3195,P5,100,3/4,F Major
 note,196800,959,60:64,C4,C4,0.3195,M6,100,3/4,F Major
@@ -3183,7 +3183,7 @@ note,219840,1439,48:27,C3,C3,0.2282,M3,100,3/4,F Major
 note,219840,1439,52:27,E3,E3,0.2282,m3,100,3/4,F Major
 note,219840,1439,55:27,G3,G3,0.2282,P4,100,3/4,F Major
 note,219840,1439,60:27,C4,C4,0.2282,P5,100,3/4,F Major
-timeSignature,221280,0,2:4,2/4,,,,,,
+time_signature,221280,0,2:4,2/4,,,,,,
 note,221280,479,29:24,F1,F1,0.2282,P1,100,2/4,F Major
 note,221280,479,41:24,F2,F2,0.2282,P5,100,2/4,F Major
 note,221280,479,48:24,C3,C3,0.2282,P4,100,2/4,F Major

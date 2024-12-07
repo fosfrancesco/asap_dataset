@@ -1,7 +1,7 @@
-type,tickOffset,tickLength,valueRaw,valuePretty,canonical,density,interval,tempo,timeSignature,keySignature
-ticksPerQuarter,0,0,480,480,,,,,,
-keySignature,0,0,4:0,E Major,,,,,,
-timeSignature,0,0,1:4,1/4,,,,,,
+type,tick_offset,tick_length,value_raw,value_pretty,canonical,density,interval,tempo,time_signature,key_signature
+ticks_per_quarter,0,0,480,480,,,,,,
+key_signature,0,0,4:0,E Major,,,,,,
+time_signature,0,0,1:4,1/4,,,,,,
 tempo,0,0,340909,176,,,,,,
 note,0,479,44:96,G#2,Ab2,0.5021,P1,176,1/4,E Major
 note,0,479,56:96,G#3,Ab3,0.5021,P1,176,1/4,E Major
@@ -10,7 +10,7 @@ note,0,119,80:96,G#5,Ab5,0.5021,M2,176,1/4,E Major
 note,120,119,78:96,F#5,Gb5,0.3651,M2,176,1/4,E Major
 note,240,119,76:96,E5,E5,0.3651,m2,176,1/4,E Major
 note,360,119,75:96,D#5,Eb5,0.3651,M2,176,1/4,E Major
-timeSignature,480,0,4:4,4/4,,,,,,
+time_signature,480,0,4:4,4/4,,,,,,
 note,480,119,37:96,C#2,Db2,0.4564,P1,176,4/4,E Major
 note,480,119,49:96,C#3,Db3,0.4564,P1,176,4/4,E Major
 note,480,59,73:96,C#5,Db5,0.4564,P1,176,4/4,E Major
@@ -568,8 +568,8 @@ note,38400,479,87:112,D#6,Eb6,0.4108,P4,176,4/4,E Major
 note,38520,119,46:96,A#2,Bb2,0.3195,m2,176,4/4,E Major
 note,38640,119,45:96,A2,A2,0.3195,M6,176,4/4,E Major
 note,38760,119,54:96,F#3,Gb3,0.3195,m2,176,4/4,E Major
-keySignature,38880,0,-4:0,Ab Major,,,,,,
-keySignature,38880,0,-4:0,Ab Major,,,,,,
+key_signature,38880,0,-4:0,Ab Major,,,,,,
+key_signature,38880,0,-4:0,Ab Major,,,,,,
 note,38880,119,41:96,F2,F2,0.4108,P1,176,4/4,Ab Major
 note,38880,119,53:96,F3,F3,0.4108,M3,176,4/4,Ab Major
 note,38880,119,69:96,A4,A4,0.4108,m2,176,4/4,Ab Major
@@ -732,8 +732,8 @@ note,49920,119,83:96,B5,B5,0.5021,M7,176,4/4,Ab Major
 note,50040,119,72:84,C5,C5,0.3651,M2,176,4/4,Ab Major
 note,50160,119,70:72,Bb4,Bb4,0.3651,m2,176,4/4,Ab Major
 note,50280,119,71:60,B4,B4,0.3651,P1,176,4/4,Ab Major
-keySignature,50400,0,4:0,E Major,,,,,,
-keySignature,50400,0,4:0,E Major,,,,,,
+key_signature,50400,0,4:0,E Major,,,,,,
+key_signature,50400,0,4:0,E Major,,,,,,
 note,50400,479,59:96,B3,B3,0.5021,M3,176,4/4,E Major
 note,50400,479,63:96,D#4,Eb4,0.5021,m3,176,4/4,E Major
 note,50400,479,66:96,F#4,Gb4,0.5021,P4,176,4/4,E Major
