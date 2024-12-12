@@ -188,8 +188,9 @@ tbl_fugue_bwv_848 <- load_music_by_title(tbl_perfs, "Fugue bwv 848") |>
 ```
 
 
-
 ### Visualization
+#### Bach Fugues
+
 ```{r}
 #| fig-width: 9
 #| fig-height: 6
@@ -223,6 +224,7 @@ tbl_fugue_bwv_846 |>
 #| fig-height: 5
 
 tbl_fugue_bwv_846 |>
+  filter(!is.na(interval)) |>
   group_by(interval) |>
   summarise(n = n()) |>
   arrange(desc(n)) |>
@@ -327,45 +329,88 @@ tbl_fugue_bwv_848 |>
 
 ```
 
+
 ```{r}
+#| warning: false
 #| fig-width: 10
-#| fig-height: 10
-tbl_fugue_bwv_848 |>
-  mutate(
-    v_velocity = var(velocity)
-  ) |>
-  ggplot(mapping = aes(x = v_velocity, color = performer)) +
-  geom_histogram(binwidth = 0.025) +
-  coord_cartesian(xlim = c(0, 1)) +
+#| fig-height: 8
+
+load_music_by_title(tbl_scores, "Fugue bwv 848")[[1]] |>
+  ggplot(mapping = aes(x = note_midi)) +
+  geom_histogram(stat = "count") +
   labs(
-    title = str_c(
-      "Note velocity variance histogram for ",
-      tbl_fugue_bwv_846$title,
-      ", ",
-      tbl_fugue_bwv_846$key_signature,
-      ", ",
-      tbl_fugue_bwv_846$composer
-    ),
-  ) +
-  facet_wrap(~performer)
-
+    title = "Note distribution for Fugue bwv 848"
+  )
 ```
-
 
 
 ```{r}
 #| warning: false
 #| fig-width: 8
 #| fig-height: 16
+
 tbl_fugue_bwv_848 |>
   group_by(performer, canonical) |>
   summarise(
     count = n()
   ) |>
-  ggplot(mapping = aes(y = canonical, x = count, color = performer)) +
-    geom_col(position = "dodge")
+  ggplot(mapping = aes(y = canonical, x = count, fill = performer)) +
+  geom_col(position = "dodge") +
+  labs(
+    title = str_c(
+      "Note count for ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer,
+      " per Performer"
+    )
+  )
 ```
 
+### Intervals
+
+Let's have a look at the intervals per composer and see how they differ
+
+```{r}
+#| fig-width: 8
+#| fig-height: 16
+tbl_scores_music |>
+  filter(!is.na(interval)) |>
+  group_by(composer, interval) |>
+  summarise(
+    count = n()
+  ) |>
+  ggplot(mapping = aes(x = interval, y = count, fill = composer)) +
+  geom_col(show.legend = FALSE) +
+  labs(
+    title = "Interval use by Composer",
+    x = "Interval",
+    y = "Count"
+  ) + 
+  facet_wrap(~composer, scale = "free", ncol = 3)
+
+```
+
+### Density
+
+Let's see it move during the course of a composition
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+tbl_scores_music |>
+  filter(composer == "Mozart") |>
+  ggplot(mapping = aes(x = time_offset, y = density)) +
+  geom_line() +
+  labs(
+    title = "Density over Time for Mozart",
+    x = "Time",
+    y = "Density"
+  ) +
+  facet_wrap(~title, scale = "free", ncol = 2)
+```
 
 
 ## Possibilities for Analysis

@@ -87,7 +87,22 @@ load_manifest <- function(root = get_asap_root()) {
 #'  so that they carry the `id', `composer`, `year_born`, `year_died`, `title` and
 #'  `performer` (if a performance) in addition to the music variables.
 load_music <- function(df) {
-  canonicals <- generate_canonical_note_range()
+  canonicals_asc <- generate_canonical_note_range()
+  intervals_asc <- c("P1",
+    "m2",
+    "M2",
+    "m3",
+    "M3",
+    "P4",
+    "A4",
+    "d5",
+    "P5",
+    "m6",
+    "M6",
+    "m7",
+    "M7",
+    "P8")
+
   pmap(df, function(id, path, ...) {
     path = file.path(get_asap_root(), path)
     tbl_song <- read_csv(path, show_col_types = FALSE)
@@ -110,7 +125,8 @@ load_music <- function(df) {
         id = id,
         # let's try to keep these guys in ascending order by making them ordered
         # factors. Folks can override it with fct_reorder() if they want to re-level.
-        canonical = fct(canonical, levels = canonicals),
+        canonical = fct(canonical, levels = canonicals_asc),
+        interval = fct(interval, levels = intervals_asc),
         note_midi = parse_integer(str_match(value_raw, "([0-9]+)")[, 2]),
         note_normal = note_midi / 127,
         # velocity is [0, 127]. We are normalizing it
@@ -184,7 +200,7 @@ load_music_by_performer <- function(df, .performer) {
 ##############
 # Internal API
 ##############
-
+#' Generates a canonical note range from A0 to Ab8 in ascending order
 generate_canonical_note_range <- function() {
   result <- c()
   canonicals <- c("A", "Bb", "B", "C", "Db", "D", "Eb", "E", "F", "Gb", "G", "Ab")
