@@ -39,22 +39,39 @@ load_manifest <- function(root = get_asap_root()) {
   manifest_path <- file.path(root, "metadata.csv")
   # we are adding an ID so that we can join performances and scores to their manifest.
   tbl_manifest <- read_csv(manifest_path, show_col_types = FALSE) |>
-    mutate(title = str_replace_all(title, "_", " "))
+    mutate(
+      year_midlife = ceiling((year_born + year_died) / 2),
+      title = str_replace_all(title, "_", " ")
+    ) |>
+    arrange(year_midlife)
   tbl_perfs <- tbl_manifest |>
     mutate(id = row_number()) |>
     rename(path = csv_performance) |>
-    select(id, composer, year_born, year_died, title, performer, path)
+    select(id,
+      composer,
+      year_born,
+      year_died,
+      year_midlife,
+      title,
+      performer,
+      path)
   tbl_scores <- tbl_manifest |>
-    distinct(composer, year_born, year_died, title, csv_score) |>
+    distinct(composer, year_born, year_died, year_midlife, title, csv_score) |>
     mutate(
       id = row_number(),
-      # There are no performers for scores. Nonetheless, we are adding `performer`
-      # to scores so that our DF is compatible and interchangeable with `perfs`.
+      # There are no performers for scores. Nonetheless, we are keeping him
+      # around for parity `perfs`.
       performer = NA,
     ) |>
     rename(path = csv_score) |>
-    # reorder so that `id` is in the first column
-    select(id, composer, year_born, year_died, title, performer, path)
+    select(id,
+      composer,
+      year_born,
+      year_died,
+      year_midlife,
+      title,
+      performer,
+      path)
   list(perfs = tbl_perfs, scores = tbl_scores)
 }
 
@@ -94,7 +111,8 @@ load_music <- function(df) {
         # let's try to keep these guys in ascending order by making them ordered
         # factors. Folks can override it with fct_reorder() if they want to re-level.
         canonical = fct(canonical, levels = canonicals),
-        note = parse_integer(str_match(value_raw, "([0-9]+)")[, 2]),
+        note_midi = parse_integer(str_match(value_raw, "([0-9]+)")[, 2]),
+        note_normal = note_midi / 127,
         # velocity is [0, 127]. We are normalizing it
         velocity = parse_integer(str_match(value_raw, ":([0-9]+)")[, 2]) / 127,
         ticks_per_quarter = tbl_tpq$value_raw,
@@ -102,6 +120,11 @@ load_music <- function(df) {
         time_duration = tick_duration_to_seconds(tick_duration, tempo, ticks_per_quarter)
       ) |>
       inner_join(df, by = "id") |>
+        rename(
+          # we don't have information on when the piece was written. Perhaps someday,
+          # but not today. In the meantime we use this as an approximation.
+          year_written = year_midlife
+        ) |>
         select(
           id,
           composer:title,
@@ -111,7 +134,8 @@ load_music <- function(df) {
           time_duration,
           tick_offset,
           tick_duration,
-          note,
+          note_midi,
+          note_normal,
           velocity,
           pretty:key_signature,
           ticks_per_quarter

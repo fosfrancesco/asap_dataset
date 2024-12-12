@@ -1,0 +1,35 @@
+---
+title: "DATA 606: Final Project Abstract"
+subtitle: "Analysis of Scores and Performances (ASAP)"
+author: "Curtis Elsasser"
+---
+
+### Introduction 
+
+My introductory paragraph for my proposal was, "Music is a mystery. Our ears love it and are quick to process it, but our brains struggle to understand it. " I have attempted to analyze a dataset of 222 compositions. 
+
+
+### Hypothesis 
+
+My hypothesis is that variability in music has increased from 1685 to 1953. I adopted a p-value of 0.05. My null hypothesis is that the change in variance is not significant.  
+
+
+### Analysis 
+
+I used an f-test to compare the variability of scores from 1685 to 1953. I divided the catalog into two groups; the older group spanned [1685, 1799] and the newer group spanned [1799, 1953]. I verified that the assumptions (normality, independence, similar variance) were met, calculated the variance of each group as cross-reference material for the results I received from the f-test.  
+
+
+### Conclusion 
+
+The preliminary calculations were encouraging, and the f-test's results reinforced the calculations. The p-value was a meager 2.2e-16 and the confidence interval was (1.326578, 1.340352). So, I rejected the null hypothesis; the variability of music did increase from 1685 to 1953. At least for the 222 compositions in the dataset. It is hard to draw a more general conclusion from our dataset for the following reasons: 
+
+* The dataset is not randomly chosen. It is a collection of composers who have all gone down in history. 
+* The dataset is not evenly distributed. There are more compositions from [1685, 1799] than [1799, 1953]. 
+* The dataset only contains music for the keyboard.   
+
+We can at least conclude that the variability of music has increased for the compositions in the dataset. 
+
+
+### Implications 
+
+It is hard to draw implications from the test performed above for the reasons mentioned in the [Conclusion](#conclusion). The only implication I would be comfortable making is that variability in music exists. And it can change over time. 

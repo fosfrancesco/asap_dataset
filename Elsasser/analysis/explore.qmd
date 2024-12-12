@@ -1,6 +1,7 @@
 ---
 title: "DATA 607: Final Project"
 author: "Curtis Elsasser"
+toc: true
 editor_options: 
   chunk_output_type: console
 ---
@@ -32,6 +33,7 @@ It's not a ship's log, so I don't know if "manifest" is the best description of 
 | `composer` | Composer's last name | `string` |
 | `year_born` | Composer's birth year (Wikipedia) | `integer` |
 | `year_died` | Composer's death year (Wikipedia) | `integer` |
+| `year_midlife` | Composer's death year (Wikipedia) | `integer` |
 | `title` | Composition's title | `string` |
 | `performer` | The performer. Extracted from `midi_performance` | `string` |
 | `midi_score` | The score. Relative path to the MIDI file | `string` |
@@ -86,6 +88,24 @@ tbl_scores |>
 ```
 :::
 
+:::{.callout-note collapse="false"}
+#### Performers
+Performances by Performer. From most recordings to least
+```{r}
+tbl_top_performers <- tbl_perfs |>
+  group_by(performer) |>
+  summarise(n = n()) |>
+  arrange(desc(n)) |>
+  filter(n >= 10) |>
+  left_join(tbl_perfs, by = "performer") |>
+  arrange(desc(n))
+
+tbl_top_performers |>
+  select(performer:title) |>
+  kable()
+```
+:::
+
 
 ### Performances
 There are a total of 1067 performances. Being so long, I'm not going to tuck him into a collapsible note. Rather, let's zoom in on a single composition; let's see who has performed "Fugue bwv 846" by Bach. 
@@ -117,6 +137,7 @@ Music is stored in various ways in the ASAP repository. The format that we have 
 | `composer` | The composer of the piece | `string` |
 | `year_born` | The composer's birth year (Wikipedia) | `integer` |
 | `year_died` | The composer's death year (Wikipedia) | `integer` |
+| `year_written` | This as an approximation that is accurate to half the composer's lifetime. | `integer` |
 | `title` | The composition's title | `string` |
 | `performer` | The performer. Extracted from `midi_performance`. `NA` for scores | `string`\|`NA` |
 | `type` | The type of data. Music is all `note` | `string` |
@@ -124,7 +145,8 @@ Music is stored in various ways in the ASAP repository. The format that we have 
 | `time_duration` | The duration in seconods | `float` |
 | `tick_offset` | The number of MIDI ticks from the beginning | `integer` |
 | `tick_duration` | The duration in MIDI ticks | `integer` |
-| `note` | The MIDI value of the note | `integer` |
+| `note_midi` | The MIDI value of the note | `integer` |
+| `note_normal` | The MIDI value normalized, [0, 1] | `integer` |
 | `velocity` | The velocity of the note, [0, 1] | `integer` |
 | `pretty` | The named representation of the note. Matches key-signature's spelling | `string` |
 | `canonical` | The canonical representation of the note. We always use the flat equivalent | `string` |
@@ -136,7 +158,23 @@ Music is stored in various ways in the ASAP repository. The format that we have 
 | `ticks_per_quarter` | The number of ticks in a quarter note | `integer` |
 
 
-### Sample
+### Load
+```{r}
+tbl_perfs_music <- load_music(tbl_perfs) |>
+  bind_rows()
+tbl_perfs_music |>
+  head() |>
+  kable()
+```
+
+```{r}
+tbl_scores_music <- load_music(tbl_scores) |>
+  bind_rows()
+tbl_scores_music |>
+  head() |>
+  kable()
+```
+
 ```{r}
 tbl_fugue_bwv_846 <- load_music_by_title(tbl_scores, "Fugue bwv 846")[[1]]
 tbl_fugue_bwv_846 |>
@@ -149,10 +187,6 @@ tbl_fugue_bwv_848 <- load_music_by_title(tbl_perfs, "Fugue bwv 848") |>
   bind_rows()
 ```
 
-```{r}
-tbl_music_perfs <- load_music(tbl_perfs) |>
-  bind_rows()
-```
 
 
 ### Visualization
@@ -254,14 +288,319 @@ tbl_fugue_bwv_848 |>
 ```
 
 ```{r}
-#| warning: false
 #| fig-width: 10
+#| fig-height: 10
+tbl_fugue_bwv_848 |>
+  ggplot(mapping = aes(sample = velocity, color = performer)) +
+  geom_line(stat = "qq")
+  labs(
+    title = str_c(
+      "Velocity QQ plot for ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer
+    ),
+  ) +
+  facet_wrap(~performer)
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+tbl_fugue_bwv_848 |>
+  ggplot(mapping = aes(x = time_duration, color = performer)) +
+  geom_histogram(binwidth = 0.025) +
+  coord_cartesian(xlim = c(0, 1)) +
+  labs(
+    title = str_c(
+      "Note duration histogram for ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer
+    ),
+  ) +
+  facet_wrap(~performer)
+
+```
+
+```{r}
+#| fig-width: 10
+#| fig-height: 10
+tbl_fugue_bwv_848 |>
+  mutate(
+    v_velocity = var(velocity)
+  ) |>
+  ggplot(mapping = aes(x = v_velocity, color = performer)) +
+  geom_histogram(binwidth = 0.025) +
+  coord_cartesian(xlim = c(0, 1)) +
+  labs(
+    title = str_c(
+      "Note velocity variance histogram for ",
+      tbl_fugue_bwv_846$title,
+      ", ",
+      tbl_fugue_bwv_846$key_signature,
+      ", ",
+      tbl_fugue_bwv_846$composer
+    ),
+  ) +
+  facet_wrap(~performer)
+
+```
+
+
+
+```{r}
+#| warning: false
+#| fig-width: 8
+#| fig-height: 16
 tbl_fugue_bwv_848 |>
   group_by(performer, canonical) |>
   summarise(
     count = n()
   ) |>
-  ggplot(mapping = aes(x = canonical, y = count, color = performer)) +
+  ggplot(mapping = aes(y = canonical, x = count, color = performer)) +
     geom_col(position = "dodge")
+```
+
+
+
+## Possibilities for Analysis
+
+### Note Length Timeline
+Is there a difference in average note length over time?
+
+```{r}
+#| fig-width: 8
+#| fig-height: 10
+tbl_perfs_music |>
+  group_by(id) |>
+  summarise(
+    avg_note_duration = mean(time_duration)
+  ) |>
+  left_join(tbl_perfs, by = "id") |>
+  ggplot(mapping = aes(x = avg_note_duration, y = year_midlife, color = composer)) +
+  geom_jitter() +
+  labs(
+    title = "Average Note Length by Composition",
+    x = "Average Note Duration",
+    y = "Approximate Year of Composition"
+  )
+
+```
+
+### Note Velocity Timeline
+Is there a difference in average velocity over time?
+
+```{r}
+#| fig-width: 8
+#| fig-height: 10
+tbl_perfs_music |>
+  group_by(id) |>
+  summarise(
+    avg_velocity = mean(velocity)
+  ) |>
+  left_join(tbl_perfs, by = "id") |>
+  ggplot(mapping = aes(x = avg_velocity, y = year_midlife, color = composer)) +
+  geom_jitter() +
+  labs(
+    title = "Average Note Length by Composition",
+    x = "Average Note Duration",
+    y = "Approximate Year of Composition"
+  )
+
+```
+
+#### Boxplot
+```{r}
+tbl_perfs_music |>
+  ggplot(mapping = aes(x = factor(year_written), y = velocity)) +
+  geom_boxplot() +
+  labs(
+    title = "Note Velocity by Year",
+    x = "Year Written",
+    y = "Note Velocity"
+  )
+```
+
+### Note Value Timeline
+Is there a difference in average value over time?
+
+```{r}
+#| fig-width: 8
+#| fig-height: 10
+tbl_perfs_music |>
+  group_by(id) |>
+  summarise(
+    avg_note = mean(note_normal)
+  ) |>
+  left_join(tbl_perfs, by = "id") |>
+  ggplot(mapping = aes(x = avg_note, y = year_midlife, color = composer)) +
+  geom_jitter() +
+  labs(
+    title = "Average Note Value by Composition",
+    x = "Average Value Duration",
+    y = "Approximate Year of Composition"
+  )
+
+```
+
+#### Boxplot
+```{r}
+tbl_perfs_music |>
+  ggplot(mapping = aes(x = factor(year_written), y = note_normal)) +
+  geom_boxplot() +
+  labs(
+    title = "Note Value by Year",
+    x = "Year Written",
+    y = "Note Value"
+  )
+```
+
+#### Variability
+```{r}
+tbl_scores_music |>
+  group_by(id) |>
+  summarise(
+    v_note = var(note_normal)
+  ) |>
+  left_join(tbl_scores, by = "id") |>
+  ggplot(mapping = aes(x = v_note, y = year_midlife)) +
+  geom_point() +
+  labs(
+    title = "Note Variance by Composition",
+    x = "Note Variance",
+    y = "Year Written"
+  )
+  
+```
+
+
+
+### Note Length by Performer
+Is there a difference in average note length by performer?
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+tbl_fugue_bwv_848 |>
+  group_by(performer) |>
+  summarise(
+    avg_note_duration = mean(time_duration)
+  ) |>
+  ggplot(mapping = aes(x = avg_note_duration, y = performer, color = performer)) +
+  geom_col() +
+  labs(
+    title = "Average Note Duration by Performer",
+    x = "Average Note Duration",
+    y = "Performer"
+  )
+```
+
+### Note Velocity Mean by Performer
+Is there a difference in average note velocity by performer?
+
+```{r}
+tbl_fugue_bwv_848 |>
+  group_by(performer) |>
+  summarise(
+    avg_velocity = mean(velocity)
+  ) |>
+  ggplot(mapping = aes(x = avg_velocity, y = performer, color = performer)) +
+  geom_col() +
+  labs(
+    title = "Average Note Velocity by Performer",
+    x = "Average Note Velocity",
+    y = "Performer"
+  )
+```
+
+### Note Velocity Variance by Performer
+Is there a difference in note velocity variance by performer?
+
+```{r}
+tbl_fugue_bwv_848 |>
+  group_by(performer) |>
+  summarise(
+    v_velocity = var(velocity)
+  ) |>
+  ggplot(mapping = aes(x = v_velocity, y = performer, color = performer)) +
+  geom_col() +
+  labs(
+    title = "Note Velocity Variance by Performer",
+    x = "Note Velocity Variance",
+    y = "Performer"
+  )
+```
+
+### Note Duration Variance by Performer
+Is there a difference in note duration variance by performer?
+
+```{r}
+tbl_fugue_bwv_848 |>
+  group_by(performer) |>
+  summarise(
+    v_time_duration = var(time_duration)
+  ) |>
+  ggplot(mapping = aes(x = v_time_duration, y = performer, color = performer)) +
+  geom_col() +
+  labs(
+    title = "Note Duration Variance by Performer",
+    x = "Note Duration Variance",
+    y = "Performer"
+  )
+```
+
+### Note Duration Variability Over Time
+Is there a difference in note duration variability over time?
+
+### Mean Composition Note Length
+What is the distribution of the average note length by compositions?
+
+#### Histogram
+
+```{r}
+tbl_scores_music |>
+  group_by(id) |>
+  summarise(
+    avg_note_duration = mean(time_duration)
+  ) |>
+  ggplot(mapping = aes(x = avg_note_duration)) +
+  geom_histogram(binwidth = 0.025) +
+  labs(
+    title = "Average Note Duration by Composition",
+    x = "Average Note Duration",
+    y = "Frequency"
+  )
+```
+
+#### Boxplot
+```{r}
+tbl_scores_music |>
+  ggplot(mapping = aes(x = factor(year_written), y = time_duration)) +
+  geom_boxplot() +
+  labs(
+    title = "Note Duration by Composition",
+    x = "Year Written",
+    y = "Note Duration"
+  )
+```
+
+### Note value over Time
+Has it changed?
+
+#### Boxplot
+```{r}
+tbl_scores_music |>
+  ggplot(mapping = aes(x = factor(year_written), y = note_normal)) +
+  geom_boxplot() +
+  labs(
+    title = "Note Value by Year",
+    x = "Year Written",
+    y = "Note Value"
+  )
 ```
 

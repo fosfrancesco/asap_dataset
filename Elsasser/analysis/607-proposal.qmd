@@ -1,0 +1,87 @@
+---
+author: "Curtis Elsasser"
+title: "DATA 607: Final Project Proposal"
+subtitle: "Music Analysis, Version 0.2"
+toc: false
+editor: source
+---
+
+## Introduction
+Music is a mystery. Our ears love it and are quick to process it, but our brains struggle to understand it. I am interested in looking at it from a different point of view. Why? For a number of reasons:
+
+* I am a musician and I love music. 
+* I am a budding data scientist and I love data. 
+* Music theory is not always satisfying. It cannot be denied that it has a strong foundation in mathematics. But it also can be argued that it can be very subjective. 
+* I want to see if I can find patterns in music that a machine may be better at finding than our ears.
+* Music can be challenging to talk about. It would be interesting to create a new language with which talk about music.
+* Different perspectives nurture different approaches. I hope that whatever discoveries lie within this project will help me write music in a new way.
+* For a long time, I have wanted to "look" at music with through the lens of a computer. This seems like a great opportunity to apply the methods of exploratory data analysis to music. 
+
+As I write this, I find myself laughing and thinking, "Oh my gosh, that sounds drop dead boring!" But I think that's the point. "To make it boring?" No, I want to see if I can take music to another level. I think such a project has the potential to be fascinating. And to be honest, I am not totally sure how to do that. But one must start somewhere. What better place than here? What better time than now?
+
+## Data
+I would like to create a dataset from a music repository. The repository I would like to work with is called [ASAP](https://github.com/fosfrancesco/asap-dataset) and it is a collection of classical music performances. The repository has a registry as well as a collection of MIDI files that can be paired with [WAV files](https://magenta.tensorflow.org/datasets/maestro). I am interested in the MIDI files because they are relatively small, easy to parse and are explicit in their representation of music. There are a total of 1,067 performances of compositions by 16 composers. And the composers bridge a wide range of time periods from the 17th century to the 21st century.
+
+### Export
+I plan to export the MIDI data as CSV files. There will be two types of CSV files. One will be a file of [compositions](#composition-metadata). It can be thought of as a registry. The other will be multiple [performance](#performance-data) files, one performance per file. The composition file will contain the metadata found in the [composition](#composition-metadata) schema. And the performance files will contain [performance](#performance-data) data as is described in their schema. 
+
+When exporting, I will be creating a unique identifier for every performance. This identifier will be used to link the performance data to the composition data.
+
+### Import
+I will be importing data into a [DuckDB](https://duckdb.org/) database. I plan to import all 1067 performances at start-up. If the machine can't handle the load in memory, I will consider using another file based database like SQLite. I will be using the [duckdb](https://cran.r-project.org/web/packages/duckdb/index.html) package to interact with the database. I will be using the [readr](https://readr.tidyverse.org/) package to read the CSV files.
+
+### Schema
+My design approximates a 3rd normal form relational database. 
+
+#### `composition` Metadata
+
+This 
+
+|Variable|Type|Attributes|Description|
+|--|--|--|------|
+|performance_id|integer|Primary key|Unique identifier for every performance|
+|composition_id|integer| |Identifier for every composition|
+|composer|character| |Name of the composer|
+|year|integer| |Year the composition was written. It is not in ASAP, but imagine I can draw it in from elsewhere|
+|performer|character| |Name of the performer. I think I can tease the last name out of the MIDI file name|
+|title|character| |Title of the composition|
+|midi_path|character| |Relative path to the MIDI file|
+|length|double| |Length of the performance in seconds|
+
+#### `performance` Data
+
+
+|Variable|Type|Attributes|Description|
+|--|---|---|-----|
+|performance_id|integer|Foreign key|Identifier of `performance_id` in  [composition](#composition-metadata) table|
+|type|[type.Key](#type-variable)||The [Key](#type-variable) of the data as listed in `type`|
+|value|unknown| |The value of the data. See [Example](#type-variable) of `type`. See the warning below| 
+|offset|double| |Time offset in seconds|
+|duration|double| |Duration of the event in seconds|
+
+:::{.callout-warning}
+##### Type of `value` Variable?
+When looking at `Example` in the [type](#type-variable) variable, one can see that the data is of mixed types. Encoding them all as strings is fine for their existence in a CSV file. But it is not ideal for statistical computations. In R, it's not even possible to have them in the same vector. I need to find a solution that works well in R.
+
+1. I could spread it across multiple columns and parallel the MIDI file structure. This would be a lot of columns. I don't like this option. It's confusing and narrows the audience that would be willing to consume the specification. Plus, on the R side, we still have the same problem. We don't want to do data analysis over a bunch of enigmatic columns.
+1. I could move the time signature and key signature into their own column.
+1. Every note could carry the current time signature and key signature. This would be a lot of redundancy.
+1. I could encode the the time signature and key signature as numbers. This would work for key signatures, but time signatures would be more challenging.
+:::
+
+
+##### `type` Variable
+|Key|Example|Description|
+|---|---|---|
+|"ts"|"4/4"|Time signature|
+|"ks"|"Eb Major"|Key signature|
+|"tp"|"120.0"|Tempo|
+|"nt"|"60"|Note. The encoding is "MIDI note". I think it makes more sense to use notation conventions: C4, D4, etc. But I'm not loving the enharmonic spelling problem.|
+
+
+##  Data analysis plan
+First, my data will need to be parsed. MIDI will need to be translated to match the schema I have outlined above. Without a doubt there will be surprises within the MIDI files, but I'm hoping they are minimal. I will be creating a `performance_id` key for every performance in the `composition` table and will tie performance data to it in the `performance` table. I believe I can tease out the performer's last name from the MIDI file name. I think this could lead to some interesting grouped statistics. It didn't occur to me until now, but I wonder what who that name belongs to? I had imagined that these were all orchestral performances, but now I'm wondering whether they are solo performances. That would simplify things nicely.
+
+With the revision to the schema and granularity of the data I plan to store, I need to think about analysis. The possibilities are exciting and endless.
+
+I know the data analysis plan is now more than a little vague. Having gone back to the drawing board with the schema, I need to think about what I can do with the data.

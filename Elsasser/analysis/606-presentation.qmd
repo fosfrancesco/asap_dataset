@@ -1,0 +1,342 @@
+---
+title: "Analyzed Scores and Performances (ASAP)"
+author: "Curtis Elsasser"
+format:
+  revealjs:
+    css: "styles.css"
+    embed-resources: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+#| warning: false
+source("wrangle.R")
+library(kableExtra)
+
+# note: load_manifest() sorts by `year_midlife`
+list_manifest <- load_manifest()
+list_scores <- load_music(list_manifest$scores)
+half <- ceiling(length(list_scores) / 2)
+tbl_music_all <- bind_rows(list_scores)
+tbl_music_old <- bind_rows(list_scores[1:half])
+tbl_music_new <- bind_rows(list_scores[(half + 1):length(list_scores)])
+year_border <- tbl_music_new$year_written[1]
+```
+
+## Overview
+
+Music is a mystery. Our ears love it and are quick to process it, but our brains struggle to understand it.
+
+-   I am a musician and I love music.
+-   I am a budding data scientist and I love data.
+-   Music theory is not always satisfying.
+-   I want to look for patterns in music that a machine may be better at finding.
+-   Different perspectives nurture new discoveries.
+-   I have wanted to view music through the lens of a computer for ages. What better time than now?
+
+## The Data
+
+Source: Aligned Scores and Performances ([ASAP](https://github.com/celsasser/asap-dataset)) dataset.
+
+:::{.font-size-one-half}
+:::{.columns}
+:::{.column width="40%"}
+To the right are the composers and their work represented in the catalog.
+:::
+
+:::{.column width="60%"}
+| Composers        | Performances | Scores |
+|------------------|:---------:|:--------:|
+| **Bach**         | 169          | 59     |
+| **Balakirev**    | 10           | 1      |
+| **Beethoven**    | 271          | 57     |
+| **Brahms**       | 1            | 1      |
+| **Chopin**       | 289          | 34     |
+| **Debussy**      | 3            | 2      |
+| **Glinka**       | 2            | 1      |
+| **Haydn**        | 44           | 11     |
+| **Liszt**        | 121          | 16     |
+| **Mozart**       | 16           | 6      |
+| **Prokofiev**    | 8            | 1      |
+| **Rachmaninoff** | 8            | 4      |
+| **Ravel**        | 22           | 4      |
+| **Schubert**     | 62           | 13     |
+| **Schumann**     | 28           | 10     |
+| **Scriabin**     | 13           | 2      |
+| **Total**        | 1067         | 222    |
+:::
+:::
+:::
+
+## Scores vs. Performances
+
+Performances and scores are very closely related, but they are not the same. The score is the composition as written by the composer. The performance is the composition as played by the performer. Classical music is a very structured genre, but the performance of it is very expressive. It's very difficult to reproduce it in it's entirety with metadata such as dynamics. Where the tempo, key-signature and time-signature are meaningful in the score, they are meaningless in the performances in this repository. Simply, the score is the blueprint, the performance is the building.
+
+## Schema: the Catalog
+
+:::{.font-size-one-half}
+| Column | Description | Type |
+|------------------------|------------------------|------------------------|
+| `id` | ID that identifies this composition | `string` |
+| `composer` | Composer's last name | `string` |
+| `year_born` | Composer's birth year (Wikipedia) | `integer` |
+| `year_died` | Composer's death year (Wikipedia) | `integer` |
+| `year_midlife` | Composer's halfway point (Wikipedia) | `integer` |
+| `title` | Composition's title | `string` |
+| `performer` | The performer. Extracted from `midi_performance` | `string` |
+| `midi_score` | The composition's MIDI score file (relative path) | `string` |
+| `midi_performance` | The composition's MIDI performance file (relative path) | `string` |
+| `csv_score` | The score's CSV (relative path) | `string` |
+| `csv_performance` | The performance's CSV (relative path) | `string` |
+:::
+
+## Schema: the Score/Performance
+
+:::{.font-size-one-half}
+| Column | Description | Type |
+|------------|---------------------------------|-------|
+| `id` | composition ID | `integer` |
+| `composer` | The composer of the piece | `string` |
+| `year_born` | The composer's birth year (Wikipedia) | `integer` |
+| `year_died` | The composer's death year (Wikipedia) | `integer` |
+| `year_written` | This as an approximation that is accurate to half the composer's lifetime. | `integer` |
+| `title` | The composition's title | `string` |
+| `performer` | The performer. Extracted from `midi_performance`. `NA` for scores | `string`\|`NA` |
+| `type` | The type of data. Music is all `note` | `string` |
+| `time_offset` | The number of seconds from the beginning | `float` |
+| `time_duration` | The duration in seconods | `float` |
+| `tick_offset` | The number of MIDI ticks from the beginning | `integer` |
+| `tick_duration` | The duration in MIDI ticks | `integer` |
+| `note_midi` | The MIDI value of the note | `integer` |
+| `note_normal` | The MIDI value normalized, \[0, 1\] | `integer` |
+| `velocity` | The velocity of the note, \[0, 1\] | `integer` |
+:::
+
+## Schema: the Score/Performance (cont.)
+:::{.font-size-one-half}
+| Column | Description | Type |
+|------------|---------------------------------|-------|
+| `pretty` | The named representation of the note. Matches key-signature's spelling | `string` |
+| `canonical` | The canonical representation of the note. We always use the flat equivalent | `string` |
+| `density` | How dense notes are in the vicinity of this note. | `float` |
+| `interval` | The interval between this note and the following note | `string` |
+| `tempo` | The tempo of the current point in the piece | `integer` |
+| `key_signature` | The key signature at this point in the piece | `string` |
+| `time_signature` | The time signature at this point in the piece | `string` |
+| `ticks_per_quarter` | The number of ticks in a quarter note | `integer` |
+:::
+
+## MIDI?
+
+MIDI = Musical Instrument Digital Interface.
+
+::: {columns}
+::: {.column width="25%"}
+![](./res/robot-03.png){height="250px"}
+:::
+
+:::: {.column width="75%"}
+| Type             | Performer  | Media                            |
+|------------------|------------|----------------------------------|
+| Audio            | Elaine Lee | ![](./res/bwv848-lee-live.mp3)   |
+| MIDI Performance | Elaine Lee | ![](./res/bwv848-lee-midi.mp3)   |
+| MIDI Score       | NA         | ![](./res/bwv848-score-midi.mp3) |
+
+::: font-size-three-quarters
+The Well-Tempered Clavier I No. 3 in C-sharp major (BWV 848) by J.S. Bach
+:::
+:::
+:::
+
+## The Question
+
+Did composition note variance increase between 1685 and 1953?
+
+I believe it did. To test this, I will:
+
+- Divide the data into two sets: [1685, 1799] and [1799, 1953].
+- Use an f-test to determine if there is a significant difference in note variance.
+
+**Independent variable**: time.
+
+**Dependent variable**: note variance.
+
+## Composers
+
+```{r}
+#| fig-width: 8
+#| fig-height: 4
+list_manifest$scores |>
+  nest_by(composer, year_born, year_died) |>
+  arrange(year_born) |>
+  mutate(composer = factor(composer)) |>
+  ggplot(mapping = aes(x = year_born, y = composer, color = composer)) +
+  geom_segment(mapping = aes(xend = year_died), linewidth = 6, show.legend = FALSE) +
+  geom_vline(xintercept = year_border, linetype = "dashed") +
+  labs(
+    title = "Composers and their Lifespans", 
+    subtitle = "Dashed line represents the year that divides the composers into two groups.",
+    x = "Lifetime", 
+    y = "Composer"
+  )
+  
+```
+
+## Note Variance
+
+```{r}
+tbl_music_all |>
+  ggplot(mapping = aes(x = note_normal, y = factor(year_written), )) +
+  geom_boxplot(outliers = FALSE) +
+  labs(
+    x = "Note Value",
+    y = "~Year Written"
+  )
+```
+
+## Assumptions
+
+1.  Is data is normally distributed?
+
+```{r}
+music_all_nn_mean <- mean(tbl_music_all$note_normal)
+music_all_nn_sd <- sd(tbl_music_all$note_normal)
+
+tbl_music_all |>
+  ggplot(mapping = aes(x = note_normal)) +
+  geom_histogram(
+    mapping = aes(y = ..density..,), 
+    binwidth = 0.025
+  ) +
+  stat_function(
+    args = list(mean = music_all_nn_mean, sd = music_all_nn_sd),
+    fun = dnorm,
+    mapping = aes(alpha = 0.8, color = "red", linewidth = 0.025),
+    show.legend = FALSE
+  ) +
+  labs(
+    title = "Density Plot of Note Values",
+    x = "Note Value", 
+    y = "Density"
+  )
+
+```
+
+## QQ Plot
+
+```{r}
+tbl_music_all |>
+  ggplot(mapping = aes(sample = note_normal)) +
+  geom_qq() +
+  geom_qq_line() +
+  labs(
+    x = "Theoretical Quantiles",
+    y = "Sample Quantiles"
+  )
+```
+
+## Numbers
+
+::: columns
+::: {.column width="50%"}
+**1685 - 1799**
+
+```{r}
+tbl_music_old |>
+  summarise(
+    mean = round(mean(note_normal), 3),
+    sd = round(sd(note_normal), 3),
+    N = n()
+  ) |>
+  kable()
+```
+:::
+
+::: {.column width="50%"}
+**1799 - 1953**
+
+```{r}
+tbl_music_new |>
+  summarise(
+    mean = round(mean(note_normal), 3),
+    SD = round(sd(note_normal), 3),
+    N = n()
+  ) |>
+  kable()
+```
+:::
+:::
+
+Ratio of SDs: $$ \frac{var\text{(1799 - 1953)}}{var\text{(1685 - 1799)}} = 1.155$$
+
+```{r}
+#| eval: false
+round(sd(tbl_music_new$note_normal) / sd(tbl_music_old$note_normal), 3)
+```
+
+## Assumptions (cont.)
+
+1.  Is data is normally distributed?
+
+Yes, sufficiently enough for us to proceed.
+
+2.  Independence?
+
+Yes, each note is independent of the other notes.
+
+3.  Homogeneity of variance?
+
+I calculated SD for both portions of the dataset and found that they are close with a difference of \~0.01, which is 1% of our range. This is acceptable.
+
+## Hypothesis
+
+$H_0$: There is no significant difference in note variance over time.
+
+$H_1$: There is a significant difference in note variance over time.
+
+## F Test
+
+:::{.font-size-two-thirds}
+`var.test(music_new, music_old)`
+:::
+
+```{r}
+# the documentation is not helpful regarding the order of these arguments,
+# but through experimentation I found that the first argument is the numerator
+# in the ratio of variances.
+result <- var.test(tbl_music_new$note_normal, tbl_music_old$note_normal)
+print(result)
+```
+
+## Conclusion
+
+The p-value is crazy small (2.2e-16) and the confidence interval (1.326578 1.340352) is fairly high, which gives me reason to believe that I can reject the null hypothesis. There is a significant difference in note variance between the two portions of the dataset.
+
+## Important?
+
+It is important in the same way that history is important. It informs us of who we are and where we might be going. Interestingly, I would guess that the variance in note values has decreased in the past \~70 years. This does not make us bad people. Variance in music does not correlate to quality.
+
+## Limitations?
+
+-   The dataset is not randomly chosen. It is a collection of composers who have all gone down in history.
+-   The dataset is not evenly distributed. There are more compositions from \[1685, 1799\] than \[1799, 1953\].
+-   The dataset only contains music for the keyboard.
+
+## Naughty or Nice
+
+The Well-Tempered Clavier I No. 3 in C-sharp major
+
+It is the most impossible key in the whole of the Wohltemperirte Clavier: C-sharp major. No fewer than seven sharps adorn the beginning of each staff. Furthermore, it is an unnecessarily complicated key, as instead of seven sharps you could use five flats to write exactly the same pitch – as D-flat major. In 1728, the music theorist Johann David Heinichen therefore classified C-sharp major as one of the ‘superfluous keys’. Here, Bach is deliberately toying with the mind of the keyboard player, as the instinctive correspondence between the black noteheads on the paper and the fingers on the keys no longer works.
+
+[Patrick Ayrton](https://www.bachvereniging.nl/en/bwv/bwv-848)
+
+## References
+:::{.font-size-three-quarters}
+- Aligned Scores and Performances (ASAP) dataset: <https://github.com/celsasser/asap-dataset>.
+    - Wrangling: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/assembler>
+    - Analysis: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis>
+- Aligned Scores and Performances (ASAP) dataset: <https://github.com/fosfrancesco/asap-dataset> whose authors are: Foscarin, Francesco and McLeod, Andrew and Rigaux, Philippe and Jacquemard, Florent and Sakai, Masahiko
+- Elaine Lee, Bach Prelude and Fugue in C-Sharp Major BWV 848: <https://www.youtube.com/watch?v=kb97WGPz0So>
+- The Well-Tempered Clavier I No. 3 in C-sharp major: <https://www.bachvereniging.nl/en/bwv/bwv-848>
+:::
