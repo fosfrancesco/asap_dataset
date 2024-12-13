@@ -3,7 +3,7 @@ title: "Analyzed Scores and Performances (ASAP)"
 author: "Curtis Elsasser"
 format:
   revealjs:
-    css: "styles.css"
+    css: "606-styles.css"
     embed-resources: true
 editor_options: 
   chunk_output_type: console

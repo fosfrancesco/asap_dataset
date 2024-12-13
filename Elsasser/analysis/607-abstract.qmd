@@ -1,0 +1,17 @@
+---
+title: "DATA 607: Final Project Abstract"
+subtitle: "Analysis of Scores and Performances (ASAP)"
+author: "Curtis Elsasser"
+---
+
+### Introduction 
+
+My introductory paragraph for my proposal was, "Music is a mystery. Our ears love it and are quick to process it, but our brains struggle to understand it." I have wrangled and explored 222 compositions and 1067 performances, attempting to better understand it.
+
+
+### Analysis 
+
+
+### Conclusion 
+
+

@@ -1,0 +1,6 @@
+# Notes
+
+## Oh the places you'll go
+- interested in creating a graph out of the notes
+- expand upon and improve the density calculation?
+- 
