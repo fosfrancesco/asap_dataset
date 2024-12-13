@@ -8,6 +8,7 @@ width: 1050
 height: 900
 max-scale: 1.25
 smaller: true
+theme: solarized
 format:
   revealjs:
     css: "607-styles.css"
@@ -42,17 +43,21 @@ Music is a mystery. We can easily appreciate it without understanding it, but I 
 
 Source: Aligned Scores and Performances ([ASAP](https://github.com/celsasser/asap-dataset)) dataset.
 
-Wrangler: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/assembler>
+The Music: <https://github.com/celsasser/asap-dataset>
 
-- Parses MIDI files into CSVs
+- The hierarchy is generally: `<composer>/<collection>/<content>`. There are exceptions. The foolproof way to navigate the hiearchy is through what I call the "manifest", but is actually called [metadata.csv](https://github.com/celsasser/asap-dataset/blob/main/metadata.csv).
+
+The Wrangler: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/assembler>
+
+- Parses MIDI files into CSVs: one CSV file for every score, and one CSV file for every performance.
 - Updates [metadata.csv](https://github.com/celsasser/asap-dataset/blob/main/metadata.csv) with CSV paths, performer names, and composer birth and death years.
-- Calculates some simple metrics such as density and interval.
+- Calculates some simple metrics such as [density](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/metrics.ts#L15) and [interval](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/metrics.ts#L40).
 
-Analysis: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis>
+Data Analysis: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis>
 
-- A wrangler, [wrangle.R](https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis/wrangle.R), to load the data.
+- A wrangler, [wrangle.R](https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis/wrangle.R), that loads and processes data.
 - This presentation lives there.
-- Includes explorations and experiments.
+- Includes [EDA](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/analysis/explore.qmd). More E than DA.
 
 ## The Data's Residents
 
@@ -82,8 +87,40 @@ Analysis: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis
 
 Performances and scores are very closely related, but they are not the same. The score is the composition as written by the composer. The performance is the composition as played by the performer. Classical music is a very structured genre, but the performance of it is very expressive. It's very difficult to reproduce it in it's entirety with metadata such as dynamics. Where the tempo, key-signature and time-signature are meaningful in the score, they are meaningless in the performances in this repository. Simply, the score is the blueprint, the performance is the building.
 
+## Wrangling
+The [wrangler](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/) is a command line application written in Typescript. It supports three [commands](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/index.ts):
+
+:::{.incremental}
+- MIDI file -> CSV file: `assembler file <path-MIDI> <path-CSV>`
+- CSV manifest -> CSV files: `assembler list <path-CSV>`
+- Dump a MIDI file: `assembler dump <path-MIDI>`
+:::
+
+### Why Typescript?
+
+:::{.incremental}
+* Because there exists a [MIDI parser](https://www.npmjs.com/package/midi-file-io) that I like to work with. 
+* It doesn't presume anything. 
+* It returns parsed data in a strongly typed [MidiIoSong](https://github.com/celsasser/midi-file-io/blob/HEAD/src/types.ts#L109) data structure.
+:::
+
+## Wide or Long?
+
+I oscillated back and forth with this question:
+
+- [Wide](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/file.ts#L306): It's tidy and bloated.
+- [Narrow](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/file.ts#L244): It's not tidy but it's lean.
+
+I went mostly wide for two reasons:
+
+:::{.incremental}
+1. It's easier to process on the R side.
+2. Most of the compositions are short. Volume wasn't a problem.
+:::
+
 ## Schema: the Catalog
 
+:::{.font-size-three-quarters}
 | Column | Description | Type |
 |------------------------|------------------------|------------------------|
 | `id` | ID that identifies this composition | `string` |
@@ -97,9 +134,11 @@ Performances and scores are very closely related, but they are not the same. The
 | `midi_performance` | The composition's MIDI performance file (relative path) | `string` |
 | `csv_score` | The score's CSV (relative path) | `string` |
 | `csv_performance` | The performance's CSV (relative path) | `string` |
+:::
 
 ## Schema: the Score/Performance
 
+:::{.font-size-three-quarters}
 | Column | Description | Type |
 |------------|---------------------------------|-------|
 | `id` | composition ID | `integer` |
@@ -109,7 +148,7 @@ Performances and scores are very closely related, but they are not the same. The
 | `year_written` | This as an approximation that is accurate to half the composer's lifetime. | `integer` |
 | `title` | The composition's title | `string` |
 | `performer` | The performer. Extracted from `midi_performance`. `NA` for scores | `string`\|`NA` |
-| `type` | The type of data. Music is all `note` | `string` |
+| `type` | The type of data: `note`, `ticks_per_quarter`, `tempo`, `key_signature`, `time_signature` | `string` |
 | `time_offset` | The number of seconds from the beginning | `float` |
 | `time_duration` | The duration in seconods | `float` |
 | `tick_offset` | The number of MIDI ticks from the beginning | `integer` |
@@ -117,8 +156,11 @@ Performances and scores are very closely related, but they are not the same. The
 | `note_midi` | The MIDI value of the note | `integer` |
 | `note_normal` | The MIDI value normalized, \[0, 1\] | `integer` |
 | `velocity` | The velocity of the note, \[0, 1\] | `integer` |
+:::
 
 ## Schema: the Score/Performance (cont.)
+
+:::{.font-size-three-quarters}
 | Column | Description | Type |
 |------------|---------------------------------|-------|
 | `pretty` | The named representation of the note. Matches key-signature's spelling | `string` |
@@ -129,6 +171,7 @@ Performances and scores are very closely related, but they are not the same. The
 | `key_signature` | The key signature at this point in the piece | `string` |
 | `time_signature` | The time signature at this point in the piece | `string` |
 | `ticks_per_quarter` | The number of ticks in a quarter note | `integer` |
+:::
 
 ## MIDI?
 
@@ -151,6 +194,8 @@ The Well-Tempered Clavier I No. 3 in C-sharp major (BWV 848) by J.S. Bach
 :::
 :::
 :::
+
+## EDA
 
 ## Naughty or Nice
 
