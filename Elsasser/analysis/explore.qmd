@@ -412,6 +412,54 @@ tbl_scores_music |>
   facet_wrap(~title, scale = "free", ncol = 2)
 ```
 
+## Correlation
+### Note/Velocity
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+df <- tbl_perfs_music |>
+  group_by(id) |>
+  summarize(
+    correlation = abs(cor(note_normal, velocity))
+  ) |>
+  arrange(desc(correlation)) |>
+  head(n = 8)
+
+df |>
+  left_join(tbl_perfs_music, by = c("id")) |>
+  ggplot(mapping = aes(x = velocity, y = note_normal)) +
+  geom_jitter() +
+  labs(
+    title = "Highest Correlation between Note and Velocity",
+    x = "Velocity",
+    y = "Note"
+  ) +
+  facet_wrap(c("title", "id"), ncol = 2)
+```
+
+```{r}
+#| fig-width: 8
+#| fig-height: 8
+df <- tbl_perfs_music |>
+  group_by(id) |>
+  summarize(
+    correlation = abs(cor(note_normal, velocity))
+  ) |>
+  arrange(correlation) |>
+  head(n = 8)
+
+df |>
+  left_join(tbl_perfs_music, by = c("id")) |>
+  ggplot(mapping = aes(x = velocity, y = note_normal)) +
+  geom_jitter() +
+  labs(
+    title = "Lowest Correlation between Note and Velocity",
+    x = "Velocity",
+    y = "Note"
+  ) +
+  facet_wrap(c("title", "id"), ncol = 2)
+```
 
 ## Possibilities for Analysis
 

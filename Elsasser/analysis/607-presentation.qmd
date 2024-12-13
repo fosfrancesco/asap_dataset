@@ -3,12 +3,17 @@ title: "DATA 607: Final Project Presentation"
 subtitle: "Analysis of Scores and Performances (ASAP)"
 author: "Curtis Elsasser"
 date: "12/15/2024"
-echo: false
+# configure the display port
 width: 1050
 height: 900
 max-scale: 1.25
-smaller: true
 theme: solarized
+# setup some defaults
+echo: false
+fig-width: 8
+fig-height: 6
+smaller: true
+
 format:
   revealjs:
     css: "607-styles.css"
@@ -24,7 +29,13 @@ library(kableExtra)
 
 # note: load_manifest() sorts by `year_midlife`
 list_manifest <- load_manifest()
-list_scores_music <- load_music(list_manifest$scores)
+tbl_scores_music <- load_music(list_manifest$scores) |>
+  bind_rows()
+tbl_perfs_music <- load_music(list_manifest$perfs) |>
+  bind_rows()
+tbl_fugue_bwv_848 <- tbl_perfs_music |>
+  filter(title == "Fugue bwv 848")
+
 ```
 
 ## Overview
@@ -43,17 +54,17 @@ Music is a mystery. We can easily appreciate it without understanding it, but I 
 
 Source: Aligned Scores and Performances ([ASAP](https://github.com/celsasser/asap-dataset)) dataset.
 
-The Music: <https://github.com/celsasser/asap-dataset>
+The [Music](https://github.com/celsasser/asap-dataset):
 
 - The hierarchy is generally: `<composer>/<collection>/<content>`. There are exceptions. The foolproof way to navigate the hiearchy is through what I call the "manifest", but is actually called [metadata.csv](https://github.com/celsasser/asap-dataset/blob/main/metadata.csv).
 
-The Wrangler: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/assembler>
+The [Wrangler](https://github.com/celsasser/asap-dataset/tree/main/Elsasser/assembler):
 
 - Parses MIDI files into CSVs: one CSV file for every score, and one CSV file for every performance.
 - Updates [metadata.csv](https://github.com/celsasser/asap-dataset/blob/main/metadata.csv) with CSV paths, performer names, and composer birth and death years.
 - Calculates some simple metrics such as [density](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/metrics.ts#L15) and [interval](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/metrics.ts#L40).
 
-Data Analysis: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis>
+[Data Analysis](https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis):
 
 - A wrangler, [wrangle.R](https://github.com/celsasser/asap-dataset/tree/main/Elsasser/analysis/wrangle.R), that loads and processes data.
 - This presentation lives there.
@@ -82,6 +93,24 @@ Data Analysis: <https://github.com/celsasser/asap-dataset/tree/main/Elsasser/ana
 | **Scriabin**     | 13        | 2     | 13        | 2     |
 | **Total**        | 1067      | 222   | 1067      | 222   |
 :::
+
+## Timeline
+```{r}
+#| fig-width: 8
+#| fig-height: 4
+list_manifest$scores |>
+  nest_by(composer, year_born, year_died) |>
+  arrange(year_born) |>
+  mutate(composer = factor(composer)) |>
+  ggplot(mapping = aes(x = year_born, y = composer, color = composer)) +
+  geom_segment(mapping = aes(xend = year_died), linewidth = 6, show.legend = FALSE) +
+  labs(
+    title = "Composers and their Lifespans", 
+    x = "Lifetime", 
+    y = "Composer"
+  )
+  
+```
 
 ## Scores vs. Performances
 
@@ -114,8 +143,8 @@ I oscillated back and forth with this question:
 I went mostly wide for two reasons:
 
 :::{.incremental}
-1. It's easier to process on the R side.
-2. Most of the compositions are short. Volume wasn't a problem.
+1. It's easier to process in R.
+2. Most of the compositions are short. File size wasn't a problem.
 :::
 
 ## Schema: the Catalog
@@ -156,6 +185,8 @@ I went mostly wide for two reasons:
 | `note_midi` | The MIDI value of the note | `integer` |
 | `note_normal` | The MIDI value normalized, \[0, 1\] | `integer` |
 | `velocity` | The velocity of the note, \[0, 1\] | `integer` |
+| `pretty` | The named representation of the note. Matches key-signature's spelling | `string` |
+| `canonical` | The canonical representation of the note. We always use the flat equivalent | `string` |
 :::
 
 ## Schema: the Score/Performance (cont.)
@@ -163,8 +194,6 @@ I went mostly wide for two reasons:
 :::{.font-size-three-quarters}
 | Column | Description | Type |
 |------------|---------------------------------|-------|
-| `pretty` | The named representation of the note. Matches key-signature's spelling | `string` |
-| `canonical` | The canonical representation of the note. We always use the flat equivalent | `string` |
 | `density` | How dense notes are in the vicinity of this note. | `float` |
 | `interval` | The interval between this note and the following note | `string` |
 | `tempo` | The tempo of the current point in the piece | `integer` |
@@ -195,7 +224,147 @@ The Well-Tempered Clavier I No. 3 in C-sharp major (BWV 848) by J.S. Bach
 :::
 :::
 
-## EDA
+## EDA: High Note/Velocity Performance Correlation
+```{r}
+df <- tbl_perfs_music |>
+  group_by(id) |>
+  summarize(
+    correlation = abs(cor(note_normal, velocity))
+  ) |>
+  arrange(desc(correlation)) |>
+  head(n = 6)
+
+df |>
+  left_join(tbl_perfs_music, by = c("id")) |>
+  ggplot(mapping = aes(x = velocity, y = note_normal)) +
+  geom_jitter() +
+  labs(
+    x = "Velocity",
+    y = "Note"
+  ) +
+  facet_wrap(c("id", "title", "correlation"), labeller = function(d) {
+    return(select(d, title, correlation))
+  }, ncol = 3)
+```
+
+## EDA: Low Note/Velocity Performance Correlation
+
+```{r}
+df <- tbl_perfs_music |>
+  group_by(id) |>
+  summarize(
+    correlation = abs(cor(note_normal, velocity))
+  ) |>
+  arrange(correlation) |>
+  head(n = 6)
+
+df |>
+  left_join(tbl_perfs_music, by = c("id")) |>
+  ggplot(mapping = aes(x = velocity, y = note_normal)) +
+  geom_jitter() +
+  labs(
+    x = "Velocity",
+    y = "Note"
+  ) +
+  facet_wrap(c("id", "title", "correlation"), labeller = function(d) {
+    return(select(d, title, correlation))
+  }, ncol = 3)
+```
+
+## EDA: Velocity by Performer
+
+```{r}
+tbl_fugue_bwv_848 |> ggplot(mapping = aes(
+    x = time_offset, 
+    y = velocity, 
+    color = performer
+    )
+  ) +
+  geom_line(alpha = 0.8) +
+  labs(
+    title = str_c(
+      tbl_fugue_bwv_848$title,
+      ", ",
+      tbl_fugue_bwv_848$key_signature,
+      ", ",
+      tbl_fugue_bwv_848$composer
+    ),
+    x = "Time",
+    y = "Velocity"
+  )
+```
+
+## EDA: Velocity Distribution by Performer
+
+```{r}
+tbl_fugue_bwv_848 |>
+  ggplot(mapping = aes(x = velocity, color = performer)) +
+  geom_histogram(bins = 30) +
+  labs(
+    title = str_c(
+      tbl_fugue_bwv_848$title,
+      ", ",
+      tbl_fugue_bwv_848$key_signature,
+      ", ",
+      tbl_fugue_bwv_848$composer
+    ),
+  ) +
+  facet_wrap(~performer)
+```
+
+## EDA: Velocity by Year
+
+```{r}
+tbl_perfs_music |>
+  ggplot(mapping = aes(x = factor(year_written), y = velocity)) +
+  geom_boxplot() +
+  labs(
+    x = "Year Written",
+    y = "Note Velocity"
+  )
+```
+
+## EDA: Density Calculation
+
+Measures how dense a composition is over small units of time. The approach I took to [calculating](https://github.com/celsasser/asap-dataset/blob/main/Elsasser/assembler/src/metrics.ts#L15) it was to use a sliding window. It does a couple of special sauce little things like stepping backwards, but essentially it is as simple as follows:
+
+$$
+f(window\_width) \rightarrow \sum_{n=0}^{song\_width}\frac{notes\_in\_window}{\sqrt{window\_width}}
+$$
+where:
+
+- `window_width` - is the width of the window to look ahead in MIDI ticks
+- `notes_in_window` - are the number of notes that intersect with `window_width`
+
+
+## EDA: Music Score Density
+
+```{r}
+tbl_scores_music |>
+  filter(composer == "Mozart") |>
+  ggplot(mapping = aes(x = time_offset, y = density)) +
+  geom_line() +
+  labs(
+    title = "Mozart",
+    x = "Time",
+    y = "Density"
+  ) +
+  facet_wrap(~title, scale = "free", ncol = 2)
+```
+
+## Conclusion
+
+It feels as if I'm just scratching the surface. I think there is really exciting potential in an of music. 
+
+## Oh the Places You'll Go
+
+What is next? We shall see. Some ideas that interest me are:
+
+- Translate compositions into note graphs.
+- Expand upon and improve the density calculation.
+- Create a similarity score based on the comparison of two compositions.
+- It would be interesting to include an audible element in the analysis.
+- I'm hoping future semesters will offer new opportunities.
 
 ## Naughty or Nice
 
