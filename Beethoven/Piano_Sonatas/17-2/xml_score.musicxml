@@ -28685,16 +28685,6 @@
         <type>quarter</type>
         <staff>1</staff>
         </note>
-      <backup>
-        <duration>240</duration>
-        </backup>
-      <note>
-        <rest/>
-        <duration>240</duration>
-        <voice>2</voice>
-        <type>eighth</type>
-        <staff>1</staff>
-        </note>
       <direction placement="below">
         <direction-type>
           <dynamics default-x="3.29" default-y="-76.30" relative-y="-40.00">
