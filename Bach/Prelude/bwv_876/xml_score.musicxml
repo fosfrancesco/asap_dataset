@@ -11227,7 +11227,7 @@
         <staff>1</staff>
         <beam number="1">end</beam>
         </note>
-      <note default-x="64.39" default-y="-25.00" print-object="no">
+      <note default-x="64.39" default-y="-25.00">
         <pitch>
           <step>A</step>
           <alter>-1</alter>
