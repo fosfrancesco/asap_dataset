@@ -24187,6 +24187,9 @@
           <normal-notes>2</normal-notes>
         </time-modification>
         <staff>1</staff>
+        <notations>
+          <tuplet number="1" type="start" show-number="none" bracket="no"/>
+        </notations>
       </note>
       <note default-x="178">
         <pitch>
@@ -25418,6 +25421,9 @@
           <normal-notes>2</normal-notes>
         </time-modification>
         <staff>1</staff>
+        <notations>
+          <tuplet number="1" type="start" show-number="none" bracket="no"/>
+        </notations>
       </note>
       <note default-x="103">
         <pitch>
@@ -36692,6 +36698,9 @@
           <normal-notes>4</normal-notes>
         </time-modification>
         <staff>1</staff>
+        <notations>
+          <tuplet number="1" type="start" show-number="none" bracket="no"/>
+        </notations>
       </note>
       <note print-object="no">
         <cue/>
@@ -38365,6 +38374,9 @@
           <normal-notes>4</normal-notes>
         </time-modification>
         <staff>1</staff>
+        <notations>
+          <tuplet number="1" type="start" show-number="none" bracket="no"/>
+        </notations>
       </note>
       <note print-object="no">
         <cue/>
@@ -58274,6 +58286,9 @@
           <normal-notes>2</normal-notes>
         </time-modification>
         <staff>1</staff>
+        <notations>
+          <tuplet number="1" type="start" show-number="none" bracket="no"/>
+        </notations>
       </note>
       <note default-x="175">
         <pitch>
@@ -59732,6 +59747,9 @@
           <normal-notes>2</normal-notes>
         </time-modification>
         <staff>1</staff>
+        <notations>
+          <tuplet number="1" type="start" show-number="none" bracket="no"/>
+        </notations>
       </note>
       <note default-x="101">
         <pitch>
